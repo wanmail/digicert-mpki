@@ -1,14 +1,12 @@
 /*
-Enterprise PKI Manager REST API
-
- Welcome to the DigiCert ONE Enterprise PKI Manager REST API. The Enterprise PKI Manager API service provides operations for managing enrollments and certificates for users and devices, retrieving certificate profiles and seats, and account event reporting.  ## Base URL  The base URL path for endpoints in the Enterprise PKI Manager REST API is: `{server}/mpki/api/v1`.  Replace `{server}` with the hostname of your DigiCert ONE instance. For example, if you are using the DigiCert ONE hosted cloud solution, your `{server}` is `https://one.digicert.com`.  ## Authentication  API clients can authenticate to endpoints in the Enterprise PKI Manager REST API using these methods: * Header-based API token authentication. * Authentication using a client authentication certificate.  ### API token  To authenticate with an API token, include the custom HTTP header `x-api-key` in your request. Use one of these values in the `x-api-key` header: * A Service user token ID (**recommended**).     * An API token bound to a DigiCert ONE administrator.  **Note:** We recommend that you dedicate a Service user token ID to API operations as this distinguishes API requests from administrator actions in your account audit logs.   **Service user token ID** * Service users are API tokens that are not associated with a specific user. * When you create a service user, you assign only the permissions needed for the API integration. * There are two ways to create a new service user:    * 1- Use the Account Manager in DigiCert ONE:      1. Navigate to the DigiCert ONE **Account Manager**.     2. Select **Access** from the left menu.     3. Select **Service User** from the left menu.     4. Select **Create service user** and follow the remaining prompts.    * 2- Make a request to the `/account/api/v1/user` endpoint in the DigiCert ONE Account Manager API service.   **Administrator API token**  * Standard users (administrators) can create API tokens in DigiCert ONE.  * API tokens have the same permissions and access scope as the administrator that created them.  * Actions linked to the API token are logged under the administrator's name in event audit logs. * To generate a new API token:     1. Navigate to the DigiCert ONE **Account Manager**.   2. Select **Access** from the left menu.   3. Select **Administrators**.   4. Select the administrator you wish to create an API token for from the list.   5. Scroll down to the **API Tokens** section on the administrator page.    6. Select **Create API token** and follow the remaining prompts.    ### Client authentication certificate  When authenticating with a client authentication certificate, you present a trusted certificate in your request. Both DigiCert ONE administrators and service users can use client authentication certificates.  To generate a client authentication certificate:    1. Navigate to the DigiCert ONE **Account Manager**.   2. Select **Access** from the left menu.    3. Search for and select your Service user.    4. Scroll to the **Authentication certificates** section and select **Create authentication certificate**.   5. Enter a **Nickname** and select an **End date** for the certificate.    6. Select **Generate certificate**. Copy the password that is displayed (this is only displayed once and is required to decrypt the PKCS12 certificate file) and select **Download certificate**.   7. Confirm that you have downloaded the certificate file (**Certificate_pkcs12.p12**) and that you can successfully decrypt it with the provided password, then click **Close** in the certificate download dialog box.   8. Review the permissions you wish to provide to the Service user that the certificate is associated with.      **Note**: We recommend that you assign permissions according to the principle of least privilege, i.e. you assign the minimum permissions needed to perform the required tasks.    To use a client authentication certificate:  * Include the certificate in your API request. * In the base URL for the endpoint path, add the prefix `clientauth`. For example: `https://clientauth.one.digicert.com` * Omit the `x-api-key` header.  ## Requests  The Enterprise PKI Manager API service accepts REST calls on HTTP/HTTPS ports 80/443. All requests are submitted using RESTful URLs and REST features, including header-based authentication and JSON request types. The data character set encoding for requests is UTF-8.  A well-formed request uses port 443 and specifies the user-agent and content-length HTTP headers. Each request consists of a method and an endpoint. Some requests also include a request payload if relevant to the operation being performed.  ### Method  The Enterprise PKI Manager API uses these standard HTTP methods:  * GET * POST * PUT * DELETE  ### Body and content type  All requests that accept a body require passing in JSON formatted data with the `Content-Type` header set to `application/json`.  GET requests do not require passing formatted data in the request payload. However, some GET operations allow you to filter the results by providing additional path parameters or URL query strings (appended to the endpoint URL, e.g. `?limit=50`).  ## Responses  Each response consists of a header and a body. The body is formatted based on the content type requested in the `Accept` header.  **Note:** Enterprise PKI Manager API endpoints only support responses with a content type of `application/json`. Requests that use the `Accept` header to specify a different content type will fail.  ### Headers  Each response includes a header with a response code based on [RFC 2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1.1) specifications.  * HTTP codes in the **200-399** range describe a successful request. Response bodies for HTTP codes in this range include the response data associated with the operation. * HTTP codes in the **400+** range describe an error.  Unsuccessful requests return a list with one or more `errors`. Each error object includes a `code` and a `message` describing the problem with the request.  **Example error response**  ```JSON {   \"error\": {     \"code\": \"no_access\",     \"message\": \"User has no access to the Business unit with id = xxxxx or such Business unit does not exist\"   } } ``` 
-
-API version: 1.0.0
-*/
-
-// Code generated by OpenAPI Generator (https://openapi-generator.tech); DO NOT EDIT.
-
-package openapi
+ * Enterprise PKI Manager REST API
+ *
+ *  Welcome to the DigiCert ONE Enterprise PKI Manager REST API. The Enterprise PKI Manager API service provides operations for managing enrollments and certificates for users and devices, retrieving certificate profiles and seats, and account event reporting.  ## Base URL  The base URL path for endpoints in the Enterprise PKI Manager REST API is: `{server}/mpki/api/v1`.  Replace `{server}` with the hostname of your DigiCert ONE instance. For example, if you are using the DigiCert ONE hosted cloud solution, your `{server}` is `https://one.digicert.com`.  ## Authentication  API clients can authenticate to endpoints in the Enterprise PKI Manager REST API using these methods: * Header-based API token authentication. * Authentication using a client authentication certificate.  ### API token  To authenticate with an API token, include the custom HTTP header `x-api-key` in your request. Use one of these values in the `x-api-key` header: * A Service user token ID (**recommended**).     * An API token bound to a DigiCert ONE administrator.  **Note:** We recommend that you dedicate a Service user token ID to API operations as this distinguishes API requests from administrator actions in your account audit logs.   **Service user token ID** * Service users are API tokens that are not associated with a specific user. * When you create a service user, you assign only the permissions needed for the API integration. * There are two ways to create a new service user:    * 1- Use the Account Manager in DigiCert ONE:      1. Navigate to the DigiCert ONE **Account Manager**.     2. Select **Access** from the left menu.     3. Select **Service User** from the left menu.     4. Select **Create service user** and follow the remaining prompts.    * 2- Make a request to the `/account/api/v1/user` endpoint in the DigiCert ONE Account Manager API service.   **Administrator API token**  * Standard users (administrators) can create API tokens in DigiCert ONE.  * API tokens have the same permissions and access scope as the administrator that created them.  * Actions linked to the API token are logged under the administrator's name in event audit logs. * To generate a new API token:     1. Navigate to the DigiCert ONE **Account Manager**.   2. Select **Access** from the left menu.   3. Select **Administrators**.   4. Select the administrator you wish to create an API token for from the list.   5. Scroll down to the **API Tokens** section on the administrator page.    6. Select **Create API token** and follow the remaining prompts.    ### Client authentication certificate  When authenticating with a client authentication certificate, you present a trusted certificate in your request. Both DigiCert ONE administrators and service users can use client authentication certificates.  To generate a client authentication certificate:    1. Navigate to the DigiCert ONE **Account Manager**.   2. Select **Access** from the left menu.    3. Search for and select your Service user.    4. Scroll to the **Authentication certificates** section and select **Create authentication certificate**.   5. Enter a **Nickname** and select an **End date** for the certificate.    6. Select **Generate certificate**. Copy the password that is displayed (this is only displayed once and is required to decrypt the PKCS12 certificate file) and select **Download certificate**.   7. Confirm that you have downloaded the certificate file (**Certificate_pkcs12.p12**) and that you can successfully decrypt it with the provided password, then click **Close** in the certificate download dialog box.   8. Review the permissions you wish to provide to the Service user that the certificate is associated with.      **Note**: We recommend that you assign permissions according to the principle of least privilege, i.e. you assign the minimum permissions needed to perform the required tasks.    To use a client authentication certificate:  * Include the certificate in your API request. * In the base URL for the endpoint path, add the prefix `clientauth`. For example: `https://clientauth.one.digicert.com` * Omit the `x-api-key` header.  ## Requests  The Enterprise PKI Manager API service accepts REST calls on HTTP/HTTPS ports 80/443. All requests are submitted using RESTful URLs and REST features, including header-based authentication and JSON request types. The data character set encoding for requests is UTF-8.  A well-formed request uses port 443 and specifies the user-agent and content-length HTTP headers. Each request consists of a method and an endpoint. Some requests also include a request payload if relevant to the operation being performed.  ### Method  The Enterprise PKI Manager API uses these standard HTTP methods:  * GET * POST * PUT * DELETE  ### Body and content type  All requests that accept a body require passing in JSON formatted data with the `Content-Type` header set to `application/json`.  GET requests do not require passing formatted data in the request payload. However, some GET operations allow you to filter the results by providing additional path parameters or URL query strings (appended to the endpoint URL, e.g. `?limit=50`).  ## Responses  Each response consists of a header and a body. The body is formatted based on the content type requested in the `Accept` header.  **Note:** Enterprise PKI Manager API endpoints only support responses with a content type of `application/json`. Requests that use the `Accept` header to specify a different content type will fail.  ### Headers  Each response includes a header with a response code based on [RFC 2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1.1) specifications.  * HTTP codes in the **200-399** range describe a successful request. Response bodies for HTTP codes in this range include the response data associated with the operation. * HTTP codes in the **400+** range describe an error.  Unsuccessful requests return a list with one or more `errors`. Each error object includes a `code` and a `message` describing the problem with the request.  **Example error response**  ```JSON {   \"error\": {     \"code\": \"no_access\",     \"message\": \"User has no access to the Business unit with id = xxxxx or such Business unit does not exist\"   } } ``` 
+ *
+ * API version: 1.0.0
+ * Generated by: Swagger Codegen (https://github.com/swagger-api/swagger-codegen.git)
+ */
+package swagger
 
 import (
 	"bytes"
@@ -18,11 +16,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
-	"log"
 	"mime/multipart"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -37,8 +32,8 @@ import (
 )
 
 var (
-	jsonCheck = regexp.MustCompile(`(?i:(?:application|text)/(?:vnd\.[^;]+\+)?json)`)
-	xmlCheck  = regexp.MustCompile(`(?i:(?:application|text)/xml)`)
+	jsonCheck = regexp.MustCompile("(?i:[application|text]/json)")
+	xmlCheck  = regexp.MustCompile("(?i:[application|text]/xml)")
 )
 
 // APIClient manages communication with the Enterprise PKI Manager REST API API v1.0.0
@@ -116,7 +111,7 @@ func selectHeaderAccept(accepts []string) string {
 	return strings.Join(accepts, ",")
 }
 
-// contains is a case insensitive match, finding needle in a haystack
+// contains is a case insenstive match, finding needle in a haystack
 func contains(haystack []string, needle string) bool {
 	for _, a := range haystack {
 		if strings.ToLower(a) == strings.ToLower(needle) {
@@ -157,57 +152,19 @@ func parameterToString(obj interface{}, collectionFormat string) string {
 
 	if reflect.TypeOf(obj).Kind() == reflect.Slice {
 		return strings.Trim(strings.Replace(fmt.Sprint(obj), " ", delimiter, -1), "[]")
-	} else if t, ok := obj.(time.Time); ok {
-		return t.Format(time.RFC3339)
 	}
 
 	return fmt.Sprintf("%v", obj)
 }
 
-// helper for converting interface{} parameters to json strings
-func parameterToJson(obj interface{}) (string, error) {
-	jsonBuf, err := json.Marshal(obj)
-	if err != nil {
-		return "", err
-	}
-	return string(jsonBuf), err
-}
-
 // callAPI do the request.
 func (c *APIClient) callAPI(request *http.Request) (*http.Response, error) {
-	if c.cfg.Debug {
-		dump, err := httputil.DumpRequestOut(request, true)
-		if err != nil {
-			return nil, err
-		}
-		log.Printf("\n%s\n", string(dump))
-	}
-
-	resp, err := c.cfg.HTTPClient.Do(request)
-	if err != nil {
-		return resp, err
-	}
-
-	if c.cfg.Debug {
-		dump, err := httputil.DumpResponse(resp, true)
-		if err != nil {
-			return resp, err
-		}
-		log.Printf("\n%s\n", string(dump))
-	}
-	return resp, err
+	return c.cfg.HTTPClient.Do(request)
 }
 
-// Allow modification of underlying config for alternate implementations and testing
-// Caution: modifying the configuration while live can cause data races and potentially unwanted behavior
-func (c *APIClient) GetConfig() *Configuration {
-	return c.cfg
-}
-
-type formFile struct {
-		fileBytes []byte
-		fileName string
-		formFileName string
+// Change base path to allow switching to mocks
+func (c *APIClient) ChangeBasePath(path string) {
+	c.cfg.BasePath = path
 }
 
 // prepareRequest build the request
@@ -218,7 +175,8 @@ func (c *APIClient) prepareRequest(
 	headerParams map[string]string,
 	queryParams url.Values,
 	formParams url.Values,
-	formFiles []formFile) (localVarRequest *http.Request, err error) {
+	fileName string,
+	fileBytes []byte) (localVarRequest *http.Request, err error) {
 
 	var body *bytes.Buffer
 
@@ -237,7 +195,7 @@ func (c *APIClient) prepareRequest(
 	}
 
 	// add form parameters and file if available.
-	if strings.HasPrefix(headerParams["Content-Type"], "multipart/form-data") && len(formParams) > 0 || (len(formFiles) > 0) {
+	if strings.HasPrefix(headerParams["Content-Type"], "multipart/form-data") && len(formParams) > 0 || (len(fileBytes) > 0 && fileName != "") {
 		if body != nil {
 			return nil, errors.New("Cannot specify postBody and multipart form at the same time.")
 		}
@@ -256,22 +214,20 @@ func (c *APIClient) prepareRequest(
 				}
 			}
 		}
-		for _, formFile := range formFiles {
-			if len(formFile.fileBytes) > 0 && formFile.fileName != "" {
-				w.Boundary()
-				part, err := w.CreateFormFile(formFile.formFileName, filepath.Base(formFile.fileName))
-				if err != nil {
-						return nil, err
-				}
-				_, err = part.Write(formFile.fileBytes)
-				if err != nil {
-						return nil, err
-				}
+		if len(fileBytes) > 0 && fileName != "" {
+			w.Boundary()
+			//_, fileNm := filepath.Split(fileName)
+			part, err := w.CreateFormFile("file", filepath.Base(fileName))
+			if err != nil {
+				return nil, err
 			}
+			_, err = part.Write(fileBytes)
+			if err != nil {
+				return nil, err
+			}
+			// Set the Boundary in the Content-Type
+			headerParams["Content-Type"] = w.FormDataContentType()
 		}
-
-		// Set the Boundary in the Content-Type
-		headerParams["Content-Type"] = w.FormDataContentType()
 
 		// Set Content-Length
 		headerParams["Content-Length"] = fmt.Sprintf("%d", body.Len())
@@ -292,16 +248,6 @@ func (c *APIClient) prepareRequest(
 	url, err := url.Parse(path)
 	if err != nil {
 		return nil, err
-	}
-
-	// Override request host, if applicable
-	if c.cfg.Host != "" {
-		url.Host = c.cfg.Host
-	}
-
-	// Override request scheme, if applicable
-	if c.cfg.Scheme != "" {
-		url.Scheme = c.cfg.Scheme
 	}
 
 	// Adding Query Param
@@ -329,9 +275,14 @@ func (c *APIClient) prepareRequest(
 	if len(headerParams) > 0 {
 		headers := http.Header{}
 		for h, v := range headerParams {
-			headers[h] = []string{v}
+			headers.Set(h, v)
 		}
 		localVarRequest.Header = headers
+	}
+
+	// Override request host, if applicable
+	if c.cfg.Host != "" {
+		localVarRequest.Host = c.cfg.Host
 	}
 
 	// Add the user agent to the request.
@@ -363,55 +314,27 @@ func (c *APIClient) prepareRequest(
 		if auth, ok := ctx.Value(ContextAccessToken).(string); ok {
 			localVarRequest.Header.Add("Authorization", "Bearer "+auth)
 		}
-
 	}
 
 	for header, value := range c.cfg.DefaultHeader {
 		localVarRequest.Header.Add(header, value)
 	}
+
 	return localVarRequest, nil
 }
 
 func (c *APIClient) decode(v interface{}, b []byte, contentType string) (err error) {
-	if len(b) == 0 {
-		return nil
-	}
-	if s, ok := v.(*string); ok {
-		*s = string(b)
-		return nil
-	}
-	if f, ok := v.(**os.File); ok {
-		*f, err = ioutil.TempFile("", "HttpClientFile")
-		if err != nil {
-			return
-		}
-		_, err = (*f).Write(b)
-		if err != nil {
-			return
-		}
-		_, err = (*f).Seek(0, io.SeekStart)
-		return
-	}
-	if xmlCheck.MatchString(contentType) {
-		if err = xml.Unmarshal(b, v); err != nil {
-			return err
-		}
-		return nil
-	}
-	if jsonCheck.MatchString(contentType) {
-		if actualObj, ok := v.(interface{ GetActualInstance() interface{} }); ok { // oneOf, anyOf schemas
-			if unmarshalObj, ok := actualObj.(interface{ UnmarshalJSON([]byte) error }); ok { // make sure it has UnmarshalJSON defined
-				if err = unmarshalObj.UnmarshalJSON(b); err != nil {
-					return err
-				}
-			} else {
-				return errors.New("Unknown type with GetActualInstance but no unmarshalObj.UnmarshalJSON defined")
+		if strings.Contains(contentType, "application/xml") {
+			if err = xml.Unmarshal(b, v); err != nil {
+				return err
 			}
-		} else if err = json.Unmarshal(b, v); err != nil { // simple model
-			return err
+			return nil
+		} else if strings.Contains(contentType, "application/json") {
+			if err = json.Unmarshal(b, v); err != nil {
+				return err
+			}
+			return nil
 		}
-		return nil
-	}
 	return errors.New("undefined response type")
 }
 
@@ -437,13 +360,6 @@ func reportError(format string, a ...interface{}) error {
 	return fmt.Errorf(format, a...)
 }
 
-// A wrapper for strict JSON decoding
-func newStrictDecoder(data []byte) *json.Decoder {
-	dec := json.NewDecoder(bytes.NewBuffer(data))
-	dec.DisallowUnknownFields()
-	return dec
-}
-
 // Set request body from an interface{}
 func setBody(body interface{}, contentType string) (bodyBuf *bytes.Buffer, err error) {
 	if bodyBuf == nil {
@@ -452,8 +368,6 @@ func setBody(body interface{}, contentType string) (bodyBuf *bytes.Buffer, err e
 
 	if reader, ok := body.(io.Reader); ok {
 		_, err = bodyBuf.ReadFrom(reader)
-	} else if fp, ok := body.(**os.File); ok {
-		_, err = bodyBuf.ReadFrom(*fp)
 	} else if b, ok := body.([]byte); ok {
 		_, err = bodyBuf.Write(b)
 	} else if s, ok := body.(string); ok {
@@ -463,7 +377,7 @@ func setBody(body interface{}, contentType string) (bodyBuf *bytes.Buffer, err e
 	} else if jsonCheck.MatchString(contentType) {
 		err = json.NewEncoder(bodyBuf).Encode(body)
 	} else if xmlCheck.MatchString(contentType) {
-		err = xml.NewEncoder(bodyBuf).Encode(body)
+		xml.NewEncoder(bodyBuf).Encode(body)
 	}
 
 	if err != nil {
@@ -533,9 +447,8 @@ func CacheExpires(r *http.Response) time.Time {
 		lifetime, err := time.ParseDuration(maxAge + "s")
 		if err != nil {
 			expires = now
-		} else {
-			expires = now.Add(lifetime)
 		}
+		expires = now.Add(lifetime)
 	} else {
 		expiresHeader := r.Header.Get("Expires")
 		if expiresHeader != "" {
@@ -552,24 +465,24 @@ func strlen(s string) int {
 	return utf8.RuneCountInString(s)
 }
 
-// GenericOpenAPIError Provides access to the body, error and model on returned errors.
-type GenericOpenAPIError struct {
+// GenericSwaggerError Provides access to the body, error and model on returned errors.
+type GenericSwaggerError struct {
 	body  []byte
 	error string
 	model interface{}
 }
 
 // Error returns non-empty string if there was an error.
-func (e GenericOpenAPIError) Error() string {
+func (e GenericSwaggerError) Error() string {
 	return e.error
 }
 
 // Body returns the raw bytes of the response
-func (e GenericOpenAPIError) Body() []byte {
+func (e GenericSwaggerError) Body() []byte {
 	return e.body
 }
 
 // Model returns the unpacked model of the error
-func (e GenericOpenAPIError) Model() interface{} {
+func (e GenericSwaggerError) Model() interface{} {
 	return e.model
 }

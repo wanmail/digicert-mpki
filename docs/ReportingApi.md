@@ -1,6 +1,6 @@
-# \ReportingApi
+# {{classname}}
 
-All URIs are relative to *https://one.digicert.com*
+All URIs are relative to *https://one.digicert.com/*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -8,61 +8,29 @@ Method | HTTP request | Description
 [**MpkiApiV1AuditLogIdGet**](ReportingApi.md#MpkiApiV1AuditLogIdGet) | **Get** /mpki/api/v1/audit-log/{id} | Get audit log event by ID
 [**MpkiApiV1ReportEnrollmentCodeGet**](ReportingApi.md#MpkiApiV1ReportEnrollmentCodeGet) | **Get** /mpki/api/v1/report/enrollment-code | Get enrollment code report
 
-
-
-## MpkiApiV1AuditLogGet
-
-> MpkiApiV1AuditLogGet200Response MpkiApiV1AuditLogGet(ctx).PagingParameters(pagingParameters).SearchParameters(searchParameters).Execute()
-
+# **MpkiApiV1AuditLogGet**
+> InlineResponse2005 MpkiApiV1AuditLogGet(ctx, optional)
 List audit logs
 
+Use this endpoint to get all available audit log entries in your account.   Results can optionally be filtered using search and paging parameters appended to the endpoint URL (as query tags), e.g. `?create_date=22-02-2022`.   Filters for audit log data fields can also be applied to results using this format: `?data[resource_type]=enrollment`. For example, `?data[thumbprint]=12143A4E7XXX2C589EE8AE3C86321B85CA7271328XXX1C9C836935D45XXXBE9X`. 
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    pagingParameters := map[string][]openapiclient.PagingParameters{ ... } // PagingParameters |  (optional)
-    searchParameters := map[string][]openapiclient.LogSearchParameters{ ... } // LogSearchParameters |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ReportingApi.MpkiApiV1AuditLogGet(context.Background()).PagingParameters(pagingParameters).SearchParameters(searchParameters).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ReportingApi.MpkiApiV1AuditLogGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1AuditLogGet`: MpkiApiV1AuditLogGet200Response
-    fmt.Fprintf(os.Stdout, "Response from `ReportingApi.MpkiApiV1AuditLogGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1AuditLogGetRequest struct via the builder pattern
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **pagingParameters** | [**PagingParameters**](PagingParameters.md) |  | 
- **searchParameters** | [**LogSearchParameters**](LogSearchParameters.md) |  | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***ReportingApiMpkiApiV1AuditLogGetOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a ReportingApiMpkiApiV1AuditLogGetOpts struct
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **pagingParameters** | [**optional.Interface of PagingParameters**](.md)|  | 
+ **searchParameters** | [**optional.Interface of LogSearchParameters**](.md)|  | 
 
 ### Return type
 
-[**MpkiApiV1AuditLogGet200Response**](MpkiApiV1AuditLogGet200Response.md)
+[**InlineResponse2005**](inline_response_200_5.md)
 
 ### Authorization
 
@@ -70,65 +38,23 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1AuditLogIdGet
-
-> AuditLogItem MpkiApiV1AuditLogIdGet(ctx, id).Execute()
-
+# **MpkiApiV1AuditLogIdGet**
+> AuditLogItem MpkiApiV1AuditLogIdGet(ctx, id)
 Get audit log event by ID
 
+Use this endpoint to get the details of a given audit log event ID.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "efcd5341-0fca-4fa3-9bc8-52e63c37e345" // string | Audit log event ID (displayed in the audit event details on UI, and in audit logs list response)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ReportingApi.MpkiApiV1AuditLogIdGet(context.Background(), id).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ReportingApi.MpkiApiV1AuditLogIdGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1AuditLogIdGet`: AuditLogItem
-    fmt.Fprintf(os.Stdout, "Response from `ReportingApi.MpkiApiV1AuditLogIdGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** | Audit log event ID (displayed in the audit event details on UI, and in audit logs list response) | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1AuditLogIdGetRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **id** | [**string**](.md)| Audit log event ID (displayed in the audit event details on UI, and in audit logs list response) | 
 
 ### Return type
 
@@ -140,67 +66,34 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1ReportEnrollmentCodeGet
-
-> MpkiApiV1ReportEnrollmentCodeGet200Response MpkiApiV1ReportEnrollmentCodeGet(ctx).PagingParameters(pagingParameters).SearchParameters(searchParameters).Execute()
-
+# **MpkiApiV1ReportEnrollmentCodeGet**
+> InlineResponse2004 MpkiApiV1ReportEnrollmentCodeGet(ctx, optional)
 Get enrollment code report
 
+Use this endpoint to get a report of all enrollment code events.   Results can optionally be filtered using search and paging parameters appended to the endpoint URL (as query tags), e.g. `?create_date=22-02-2022`.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    pagingParameters := map[string][]openapiclient.PagingParameters{ ... } // PagingParameters |  (optional)
-    searchParameters := map[string][]openapiclient.ReportSearchParams{ ... } // ReportSearchParams |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ReportingApi.MpkiApiV1ReportEnrollmentCodeGet(context.Background()).PagingParameters(pagingParameters).SearchParameters(searchParameters).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ReportingApi.MpkiApiV1ReportEnrollmentCodeGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1ReportEnrollmentCodeGet`: MpkiApiV1ReportEnrollmentCodeGet200Response
-    fmt.Fprintf(os.Stdout, "Response from `ReportingApi.MpkiApiV1ReportEnrollmentCodeGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1ReportEnrollmentCodeGetRequest struct via the builder pattern
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **pagingParameters** | [**PagingParameters**](PagingParameters.md) |  | 
- **searchParameters** | [**ReportSearchParams**](ReportSearchParams.md) |  | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***ReportingApiMpkiApiV1ReportEnrollmentCodeGetOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a ReportingApiMpkiApiV1ReportEnrollmentCodeGetOpts struct
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **pagingParameters** | [**optional.Interface of PagingParameters**](.md)|  | 
+ **searchParameters** | [**optional.Interface of ReportSearchParams**](.md)|  | 
 
 ### Return type
 
-[**MpkiApiV1ReportEnrollmentCodeGet200Response**](MpkiApiV1ReportEnrollmentCodeGet200Response.md)
+[**InlineResponse2004**](inline_response_200_4.md)
 
 ### Authorization
 
@@ -208,10 +101,8 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -1,61 +1,30 @@
-# \ProfilesApi
+# {{classname}}
 
-All URIs are relative to *https://one.digicert.com*
+All URIs are relative to *https://one.digicert.com/*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**MpkiApiV1ProfileGet**](ProfilesApi.md#MpkiApiV1ProfileGet) | **Get** /mpki/api/v1/profile | List profiles
 [**MpkiApiV1ProfileProfileIdGet**](ProfilesApi.md#MpkiApiV1ProfileProfileIdGet) | **Get** /mpki/api/v1/profile/{profile_id} | Get profile by ID
 
-
-
-## MpkiApiV1ProfileGet
-
-> [][]PublicProfileResponse MpkiApiV1ProfileGet(ctx).ApiTokenId(apiTokenId).Execute()
-
+# **MpkiApiV1ProfileGet**
+> [][]PublicProfileResponse MpkiApiV1ProfileGet(ctx, optional)
 List profiles
 
+Use this endpoint to list all available certificate profiles in the account.   Results can optionally be limited to profiles bound to a specific API token — append the `api_token_id` to the endpoint URL as a query tag (`?api_token_id={id}`). 
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    apiTokenId := "apiTokenId_example" // string | Limit results to profiles bound to the given API token ID (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ProfilesApi.MpkiApiV1ProfileGet(context.Background()).ApiTokenId(apiTokenId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ProfilesApi.MpkiApiV1ProfileGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1ProfileGet`: [][]PublicProfileResponse
-    fmt.Fprintf(os.Stdout, "Response from `ProfilesApi.MpkiApiV1ProfileGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1ProfileGetRequest struct via the builder pattern
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **apiTokenId** | **string** | Limit results to profiles bound to the given API token ID | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***ProfilesApiMpkiApiV1ProfileGetOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a ProfilesApiMpkiApiV1ProfileGetOpts struct
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **apiTokenId** | **optional.String**| Limit results to profiles bound to the given API token ID | 
 
 ### Return type
 
@@ -67,65 +36,23 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1ProfileProfileIdGet
-
-> PublicProfileResponse MpkiApiV1ProfileProfileIdGet(ctx, profileId).Execute()
-
+# **MpkiApiV1ProfileProfileIdGet**
+> PublicProfileResponse MpkiApiV1ProfileProfileIdGet(ctx, profileId)
 Get profile by ID
 
+Use this endpoint to get the details for a given certificate profile ID.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    profileId := "d6743d9a-fb67-4a64-a33e-8a3229d28cc4" // string | Certificate profile ID
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ProfilesApi.MpkiApiV1ProfileProfileIdGet(context.Background(), profileId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ProfilesApi.MpkiApiV1ProfileProfileIdGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1ProfileProfileIdGet`: PublicProfileResponse
-    fmt.Fprintf(os.Stdout, "Response from `ProfilesApi.MpkiApiV1ProfileProfileIdGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**profileId** | **string** | Certificate profile ID | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1ProfileProfileIdGetRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **profileId** | **string**| Certificate profile ID | 
 
 ### Return type
 
@@ -137,10 +64,8 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

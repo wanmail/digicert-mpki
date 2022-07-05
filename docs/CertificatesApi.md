@@ -1,6 +1,6 @@
-# \CertificatesApi
+# {{classname}}
 
-All URIs are relative to *https://one.digicert.com*
+All URIs are relative to *https://one.digicert.com/*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -14,59 +14,26 @@ Method | HTTP request | Description
 [**MpkiApiV1CertificateSerialNumberRevokeDelete**](CertificatesApi.md#MpkiApiV1CertificateSerialNumberRevokeDelete) | **Delete** /mpki/api/v1/certificate/{serial_number}/revoke | Resume suspended certificate
 [**MpkiApiV1CertificateSerialNumberRevokePut**](CertificatesApi.md#MpkiApiV1CertificateSerialNumberRevokePut) | **Put** /mpki/api/v1/certificate/{serial_number}/revoke | Revoke certificate
 
-
-
-## MpkiApiV1CertificateEscrowApproveSerialNumberPost
-
-> MpkiApiV1CertificateEscrowApproveSerialNumberPost(ctx, serialNumber).ThumbprintSha256(thumbprintSha256).Execute()
-
+# **MpkiApiV1CertificateEscrowApproveSerialNumberPost**
+> MpkiApiV1CertificateEscrowApproveSerialNumberPost(ctx, serialNumber, optional)
 Approve escrowed certificate recovery
 
+Use this endpoint to approve a certificate recovery request for a given escrowed certificate serial number.  Certificate recovery approval requires the `RECOVER_EM_CERTIFICATE` user permission. 
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    serialNumber := "4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5" // string | Certificate serial number
-    thumbprintSha256 := "ED9707A73630676168E3D531F622082B422CEEC1955706C1DC75AEEABDB80BCA" // string | Certificate thumbprint (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificateEscrowApproveSerialNumberPost(context.Background(), serialNumber).ThumbprintSha256(thumbprintSha256).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificateEscrowApproveSerialNumberPost``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**serialNumber** | **string** | Certificate serial number | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **serialNumber** | **string**| Certificate serial number | 
+ **optional** | ***CertificatesApiMpkiApiV1CertificateEscrowApproveSerialNumberPostOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificateEscrowApproveSerialNumberPostRequest struct via the builder pattern
-
-
+### Optional Parameters
+Optional parameters are passed through a pointer to a CertificatesApiMpkiApiV1CertificateEscrowApproveSerialNumberPostOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **thumbprintSha256** | **string** | Certificate thumbprint | 
+ **thumbprintSha256** | **optional.String**| Certificate thumbprint | 
 
 ### Return type
 
@@ -78,67 +45,31 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: Not defined
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1CertificateEscrowRecoverSerialNumberGet
-
-> CertificateResponse MpkiApiV1CertificateEscrowRecoverSerialNumberGet(ctx, serialNumber).IncludeChain(includeChain).Execute()
-
+# **MpkiApiV1CertificateEscrowRecoverSerialNumberGet**
+> CertificateResponse MpkiApiV1CertificateEscrowRecoverSerialNumberGet(ctx, serialNumber, optional)
 Recover escrowed certificate by serial number
 
+Use this endpoint to recover an escrowed certificate by the given serial number.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    serialNumber := "4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5" // string | Certificate serial number
-    includeChain := true // bool | If true, include CA certificates in response (optional) (default to false)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificateEscrowRecoverSerialNumberGet(context.Background(), serialNumber).IncludeChain(includeChain).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificateEscrowRecoverSerialNumberGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1CertificateEscrowRecoverSerialNumberGet`: CertificateResponse
-    fmt.Fprintf(os.Stdout, "Response from `CertificatesApi.MpkiApiV1CertificateEscrowRecoverSerialNumberGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**serialNumber** | **string** | Certificate serial number | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **serialNumber** | **string**| Certificate serial number | 
+ **optional** | ***CertificatesApiMpkiApiV1CertificateEscrowRecoverSerialNumberGetOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificateEscrowRecoverSerialNumberGetRequest struct via the builder pattern
-
-
+### Optional Parameters
+Optional parameters are passed through a pointer to a CertificatesApiMpkiApiV1CertificateEscrowRecoverSerialNumberGetOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **includeChain** | **bool** | If true, include CA certificates in response | [default to false]
+ **includeChain** | **optional.Bool**| If true, include CA certificates in response | [default to false]
 
 ### Return type
 
@@ -150,67 +81,34 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1CertificateImportPost
-
-> []MpkiApiV1CertificateImportPost200ResponseInner MpkiApiV1CertificateImportPost(ctx).TrapSeatDuplicateError(trapSeatDuplicateError).MpkiApiV1CertificateImportPostRequestInner(mpkiApiV1CertificateImportPostRequestInner).Execute()
-
+# **MpkiApiV1CertificateImportPost**
+> []InlineResponse2002 MpkiApiV1CertificateImportPost(ctx, optional)
 Import certificate
 
+Use this endpoint to import external certificates into your account. External certificates are issued by an issuing CA which does not originate from your DigiCert ONE account.   Certificates issued by an external issuing CA which has also been imported to your account are categorized as imported certificates and can be managed accordingly.  Imported certificates can be downloaded, revoked, suspended/resumed, and can make use of OCSP/CRL validation services in your account.   Certificates issued by an issuing CA which has not been imported to your account are categorized as unmanaged certificates.  Unmanaged certificates can be downloaded from your account, but no certificate lifecycle operations are available for unmanaged seats.   Certificates imported with `revoked: true` and `reason: certificate_hold` will be imported with certificate_status `SUSPENDED`.   Revoked certificates receive the certificate_status `REVOKED` when imported — any `reason` for revocation other than `certificate_hold` is replaced with `unspecified`.   Unmanaged certificates cannot be suspended.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    trapSeatDuplicateError := true // bool | If true, automatically appends the current timestamp to the seat ID value. This feature facilitates duplicate seat ID error handling.   (optional)
-    mpkiApiV1CertificateImportPostRequestInner := []openapiclient.MpkiApiV1CertificateImportPostRequestInner{*openapiclient.NewMpkiApiV1CertificateImportPostRequestInner()} // []MpkiApiV1CertificateImportPostRequestInner |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificateImportPost(context.Background()).TrapSeatDuplicateError(trapSeatDuplicateError).MpkiApiV1CertificateImportPostRequestInner(mpkiApiV1CertificateImportPostRequestInner).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificateImportPost``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1CertificateImportPost`: []MpkiApiV1CertificateImportPost200ResponseInner
-    fmt.Fprintf(os.Stdout, "Response from `CertificatesApi.MpkiApiV1CertificateImportPost`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificateImportPostRequest struct via the builder pattern
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **trapSeatDuplicateError** | **bool** | If true, automatically appends the current timestamp to the seat ID value. This feature facilitates duplicate seat ID error handling.   | 
- **mpkiApiV1CertificateImportPostRequestInner** | [**[]MpkiApiV1CertificateImportPostRequestInner**](MpkiApiV1CertificateImportPostRequestInner.md) |  | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CertificatesApiMpkiApiV1CertificateImportPostOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a CertificatesApiMpkiApiV1CertificateImportPostOpts struct
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**optional.Interface of []V1CertificateimportBody**](v1_certificateimport_body.md)|  | 
+ **trapSeatDuplicateError** | **optional.**| If true, automatically appends the current timestamp to the seat ID value. This feature facilitates duplicate seat ID error handling.   | 
 
 ### Return type
 
-[**[]MpkiApiV1CertificateImportPost200ResponseInner**](MpkiApiV1CertificateImportPost200ResponseInner.md)
+[**[]InlineResponse2002**](inline_response_200_2.md)
 
 ### Authorization
 
@@ -218,61 +116,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1CertificatePost
-
-> CertificateResponse MpkiApiV1CertificatePost(ctx).MpkiApiV1CertificatePostRequest(mpkiApiV1CertificatePostRequest).Execute()
-
+# **MpkiApiV1CertificatePost**
+> CertificateResponse MpkiApiV1CertificatePost(ctx, optional)
 Issue certificate
 
+Use this endpoint to issue a new certificate using the given certificate and profile details.   Instant certificate issuance requires a certificate profile configured with `enrollment_method: rest_api` and `authentication_method: third_party_app`.   All Subject DN and SAN fields configured in the certificate profile with `REST Request` selected as the field value source and `Required` checked must be included in your request body.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    mpkiApiV1CertificatePostRequest := *openapiclient.NewMpkiApiV1CertificatePostRequest() // MpkiApiV1CertificatePostRequest |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificatePost(context.Background()).MpkiApiV1CertificatePostRequest(mpkiApiV1CertificatePostRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificatePost``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1CertificatePost`: CertificateResponse
-    fmt.Fprintf(os.Stdout, "Response from `CertificatesApi.MpkiApiV1CertificatePost`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificatePostRequest struct via the builder pattern
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **mpkiApiV1CertificatePostRequest** | [**MpkiApiV1CertificatePostRequest**](MpkiApiV1CertificatePostRequest.md) |  | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CertificatesApiMpkiApiV1CertificatePostOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a CertificatesApiMpkiApiV1CertificatePostOpts struct
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**optional.Interface of V1CertificateBody**](V1CertificateBody.md)|  | 
 
 ### Return type
 
@@ -284,67 +150,34 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1CertificateSearchGet
-
-> MpkiApiV1CertificateSearchGet200Response MpkiApiV1CertificateSearchGet(ctx).SearchParameters(searchParameters).PagingParameters(pagingParameters).Execute()
-
+# **MpkiApiV1CertificateSearchGet**
+> InlineResponse2003 MpkiApiV1CertificateSearchGet(ctx, optional)
 Search certificates
 
+Use this endpoint to get a detailed list of certificates in your account.  Results can be filtered using optional search and paging parameters appended to the endpoint URL as query tags (e.g. `?limit=10`).  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    searchParameters := map[string][]openapiclient.CertificateSearchParameters{ ... } // CertificateSearchParameters |  (optional)
-    pagingParameters := map[string][]openapiclient.PagingParameters{ ... } // PagingParameters |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificateSearchGet(context.Background()).SearchParameters(searchParameters).PagingParameters(pagingParameters).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificateSearchGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1CertificateSearchGet`: MpkiApiV1CertificateSearchGet200Response
-    fmt.Fprintf(os.Stdout, "Response from `CertificatesApi.MpkiApiV1CertificateSearchGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificateSearchGetRequest struct via the builder pattern
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **searchParameters** | [**CertificateSearchParameters**](CertificateSearchParameters.md) |  | 
- **pagingParameters** | [**PagingParameters**](PagingParameters.md) |  | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CertificatesApiMpkiApiV1CertificateSearchGetOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a CertificatesApiMpkiApiV1CertificateSearchGetOpts struct
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **searchParameters** | [**optional.Interface of CertificateSearchParameters**](.md)|  | 
+ **pagingParameters** | [**optional.Interface of PagingParameters**](.md)|  | 
 
 ### Return type
 
-[**MpkiApiV1CertificateSearchGet200Response**](MpkiApiV1CertificateSearchGet200Response.md)
+[**InlineResponse2003**](inline_response_200_3.md)
 
 ### Authorization
 
@@ -352,65 +185,23 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1CertificateSerialNumberGet
-
-> PublicCertificateDetails MpkiApiV1CertificateSerialNumberGet(ctx, serialNumber).Execute()
-
+# **MpkiApiV1CertificateSerialNumberGet**
+> PublicCertificateDetails MpkiApiV1CertificateSerialNumberGet(ctx, serialNumber)
 Get certificate by serial number
 
+Use this endpoint to get the details of a given certificate serial number.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    serialNumber := "4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5" // string | Certificate serial number
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificateSerialNumberGet(context.Background(), serialNumber).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificateSerialNumberGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1CertificateSerialNumberGet`: PublicCertificateDetails
-    fmt.Fprintf(os.Stdout, "Response from `CertificatesApi.MpkiApiV1CertificateSerialNumberGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**serialNumber** | **string** | Certificate serial number | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificateSerialNumberGetRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **serialNumber** | **string**| Certificate serial number | 
 
 ### Return type
 
@@ -422,69 +213,32 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1CertificateSerialNumberRenewPost
-
-> CertificateResponse MpkiApiV1CertificateSerialNumberRenewPost(ctx, serialNumber).ThumbprintSha256(thumbprintSha256).MpkiApiV1CertificateSerialNumberRenewPostRequest(mpkiApiV1CertificateSerialNumberRenewPostRequest).Execute()
-
+# **MpkiApiV1CertificateSerialNumberRenewPost**
+> CertificateResponse MpkiApiV1CertificateSerialNumberRenewPost(ctx, serialNumber, optional)
 Renew certificate
 
+Use this endpoint to renew the certificate with the given serial number.   Only certificates from certificate profiles configured with `enrollment_method: rest_api` and `authentication_method: third_party_app` can be renewed using this endpoint.   Certificates must be within the renewal period configured in the certificate profile (default is 30 days before expiration) to be eligible for renewal.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    serialNumber := "4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5" // string | Certificate serial number
-    thumbprintSha256 := "ED9707A73630676168E3D531F622082B422CEEC1955706C1DC75AEEABDB80BCA" // string | Certificate thumbprint (optional)
-    mpkiApiV1CertificateSerialNumberRenewPostRequest := *openapiclient.NewMpkiApiV1CertificateSerialNumberRenewPostRequest() // MpkiApiV1CertificateSerialNumberRenewPostRequest |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificateSerialNumberRenewPost(context.Background(), serialNumber).ThumbprintSha256(thumbprintSha256).MpkiApiV1CertificateSerialNumberRenewPostRequest(mpkiApiV1CertificateSerialNumberRenewPostRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificateSerialNumberRenewPost``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1CertificateSerialNumberRenewPost`: CertificateResponse
-    fmt.Fprintf(os.Stdout, "Response from `CertificatesApi.MpkiApiV1CertificateSerialNumberRenewPost`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**serialNumber** | **string** | Certificate serial number | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **serialNumber** | **string**| Certificate serial number | 
+ **optional** | ***CertificatesApiMpkiApiV1CertificateSerialNumberRenewPostOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificateSerialNumberRenewPostRequest struct via the builder pattern
-
-
+### Optional Parameters
+Optional parameters are passed through a pointer to a CertificatesApiMpkiApiV1CertificateSerialNumberRenewPostOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **thumbprintSha256** | **string** | Certificate thumbprint | 
- **mpkiApiV1CertificateSerialNumberRenewPostRequest** | [**MpkiApiV1CertificateSerialNumberRenewPostRequest**](MpkiApiV1CertificateSerialNumberRenewPostRequest.md) |  | 
+ **body** | [**optional.Interface of SerialNumberRenewBody**](SerialNumberRenewBody.md)|  | 
+ **thumbprintSha256** | **optional.**| Certificate thumbprint | 
 
 ### Return type
 
@@ -496,63 +250,23 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1CertificateSerialNumberRevokeDelete
-
-> MpkiApiV1CertificateSerialNumberRevokeDelete(ctx, serialNumber).Execute()
-
+# **MpkiApiV1CertificateSerialNumberRevokeDelete**
+> MpkiApiV1CertificateSerialNumberRevokeDelete(ctx, serialNumber)
 Resume suspended certificate
 
+Use this endpoint to resume the previously suspended certificate with the given serial number.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    serialNumber := "4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5" // string | Certificate serial number
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificateSerialNumberRevokeDelete(context.Background(), serialNumber).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificateSerialNumberRevokeDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**serialNumber** | **string** | Certificate serial number | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificateSerialNumberRevokeDeleteRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **serialNumber** | **string**| Certificate serial number | 
 
 ### Return type
 
@@ -564,67 +278,32 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: Not defined
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1CertificateSerialNumberRevokePut
-
-> MpkiApiV1CertificateSerialNumberRevokePut(ctx, serialNumber).ThumbprintSha256(thumbprintSha256).MpkiApiV1CertificateSerialNumberRevokeDeleteRequest(mpkiApiV1CertificateSerialNumberRevokeDeleteRequest).Execute()
-
+# **MpkiApiV1CertificateSerialNumberRevokePut**
+> MpkiApiV1CertificateSerialNumberRevokePut(ctx, serialNumber, optional)
 Revoke certificate
 
+Use this endpoint to revoke a certificate by serial number.   Include the `revocation_reason` in the request body — accepted values are:   `unspecified`, `key_compromise`, `ca_compromise`, `affiliation_changed`, `superseded`, `cessation_of_operation`, `certificate_hold`, `remove_from_crl`, `privilege_withdrawn`, or `aa_compromise` .   **Note:** If multiple certificates with the same serial number exist in your account, an error response with the message **\"Collision occurred! Please specify additional parameter: thumbprint_sha256\"** is returned. Retry the request with the SHA256 thumbprint of the certificate passed as a query tag (append `?thumbprint_sha256={your thumbprint}` to the endpoint URL). 
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    serialNumber := "4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5" // string | Certificate serial number
-    thumbprintSha256 := "ED9707A73630676168E3D531F622082B422CEEC1955706C1DC75AEEABDB80BCA" // string | Certificate thumbprint (optional)
-    mpkiApiV1CertificateSerialNumberRevokeDeleteRequest := *openapiclient.NewMpkiApiV1CertificateSerialNumberRevokeDeleteRequest() // MpkiApiV1CertificateSerialNumberRevokeDeleteRequest |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CertificatesApi.MpkiApiV1CertificateSerialNumberRevokePut(context.Background(), serialNumber).ThumbprintSha256(thumbprintSha256).MpkiApiV1CertificateSerialNumberRevokeDeleteRequest(mpkiApiV1CertificateSerialNumberRevokeDeleteRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CertificatesApi.MpkiApiV1CertificateSerialNumberRevokePut``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**serialNumber** | **string** | Certificate serial number | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **serialNumber** | **string**| Certificate serial number | 
+ **optional** | ***CertificatesApiMpkiApiV1CertificateSerialNumberRevokePutOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1CertificateSerialNumberRevokePutRequest struct via the builder pattern
-
-
+### Optional Parameters
+Optional parameters are passed through a pointer to a CertificatesApiMpkiApiV1CertificateSerialNumberRevokePutOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **thumbprintSha256** | **string** | Certificate thumbprint | 
- **mpkiApiV1CertificateSerialNumberRevokeDeleteRequest** | [**MpkiApiV1CertificateSerialNumberRevokeDeleteRequest**](MpkiApiV1CertificateSerialNumberRevokeDeleteRequest.md) |  | 
+ **body** | [**optional.Interface of SerialNumberRevokeBody**](SerialNumberRevokeBody.md)|  | 
+ **thumbprintSha256** | **optional.**| Certificate thumbprint | 
 
 ### Return type
 
@@ -636,10 +315,8 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: Not defined
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

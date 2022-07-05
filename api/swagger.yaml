@@ -1,0 +1,2685 @@
+openapi: 3.0.3
+info:
+  title: Enterprise PKI Manager REST API
+  description: "\nWelcome to the DigiCert ONE Enterprise PKI Manager REST API. The\
+    \ Enterprise PKI Manager API service provides operations for managing enrollments\
+    \ and certificates for users and devices, retrieving certificate profiles and\
+    \ seats, and account event reporting.\n\n## Base URL\n\nThe base URL path for\
+    \ endpoints in the Enterprise PKI Manager REST API is: `{server}/mpki/api/v1`.\n\
+    \nReplace `{server}` with the hostname of your DigiCert ONE instance. For example,\
+    \ if you are using the DigiCert ONE hosted cloud solution, your `{server}` is\
+    \ `https://one.digicert.com`.\n\n## Authentication\n\nAPI clients can authenticate\
+    \ to endpoints in the Enterprise PKI Manager REST API using these methods:\n*\
+    \ Header-based API token authentication.\n* Authentication using a client authentication\
+    \ certificate.\n\n### API token\n\nTo authenticate with an API token, include\
+    \ the custom HTTP header `x-api-key` in your request. Use one of these values\
+    \ in the `x-api-key` header:\n* A Service user token ID (**recommended**).   \
+    \ \n* An API token bound to a DigiCert ONE administrator.\n\n**Note:** We recommend\
+    \ that you dedicate a Service user token ID to API operations as this distinguishes\
+    \ API requests from administrator actions in your account audit logs. \n\n**Service\
+    \ user token ID**\n* Service users are API tokens that are not associated with\
+    \ a specific user.\n* When you create a service user, you assign only the permissions\
+    \ needed for the API integration.\n* There are two ways to create a new service\
+    \ user:\n\n  * 1- Use the Account Manager in DigiCert ONE: \n    1. Navigate to\
+    \ the DigiCert ONE **Account Manager**.\n    2. Select **Access** from the left\
+    \ menu.\n    3. Select **Service User** from the left menu.\n    4. Select **Create\
+    \ service user** and follow the remaining prompts.\n\n  * 2- Make a request to\
+    \ the `/account/api/v1/user` endpoint in the DigiCert ONE Account Manager API\
+    \ service.\n\n\n**Administrator API token**\n\n* Standard users (administrators)\
+    \ can create API tokens in DigiCert ONE.\n\n* API tokens have the same permissions\
+    \ and access scope as the administrator that created them.\n\n* Actions linked\
+    \ to the API token are logged under the administrator's name in event audit logs.\n\
+    * To generate a new API token: \n\n  1. Navigate to the DigiCert ONE **Account\
+    \ Manager**.\n  2. Select **Access** from the left menu.\n  3. Select **Administrators**.\n\
+    \  4. Select the administrator you wish to create an API token for from the list.\n\
+    \  5. Scroll down to the **API Tokens** section on the administrator page. \n\
+    \  6. Select **Create API token** and follow the remaining prompts. \n\n\n###\
+    \ Client authentication certificate\n\nWhen authenticating with a client authentication\
+    \ certificate, you present a trusted certificate in your request. Both DigiCert\
+    \ ONE administrators and service users can use client authentication certificates.\n\
+    \nTo generate a client authentication certificate:\n\n  1. Navigate to the DigiCert\
+    \ ONE **Account Manager**.\n  2. Select **Access** from the left menu. \n  3.\
+    \ Search for and select your Service user. \n  4. Scroll to the **Authentication\
+    \ certificates** section and select **Create authentication certificate**.\n \
+    \ 5. Enter a **Nickname** and select an **End date** for the certificate. \n \
+    \ 6. Select **Generate certificate**. Copy the password that is displayed (this\
+    \ is only displayed once and is required to decrypt the PKCS12 certificate file)\
+    \ and select **Download certificate**.\n  7. Confirm that you have downloaded\
+    \ the certificate file (**Certificate_pkcs12.p12**) and that you can successfully\
+    \ decrypt it with the provided password, then click **Close** in the certificate\
+    \ download dialog box.\n  8. Review the permissions you wish to provide to the\
+    \ Service user that the certificate is associated with.\n  \n  **Note**: We recommend\
+    \ that you assign permissions according to the principle of least privilege, i.e.\
+    \ you assign the minimum permissions needed to perform the required tasks.  \n\
+    \nTo use a client authentication certificate:\n\n* Include the certificate in\
+    \ your API request.\n* In the base URL for the endpoint path, add the prefix `clientauth`.\
+    \ For example: `https://clientauth.one.digicert.com`\n* Omit the `x-api-key` header.\n\
+    \n## Requests\n\nThe Enterprise PKI Manager API service accepts REST calls on\
+    \ HTTP/HTTPS ports 80/443. All requests are submitted using RESTful URLs and REST\
+    \ features, including header-based authentication and JSON request types. The\
+    \ data character set encoding for requests is UTF-8.\n\nA well-formed request\
+    \ uses port 443 and specifies the user-agent and content-length HTTP headers.\
+    \ Each request consists of a method and an endpoint. Some requests also include\
+    \ a request payload if relevant to the operation being performed.\n\n### Method\n\
+    \nThe Enterprise PKI Manager API uses these standard HTTP methods:\n\n* GET\n\
+    * POST\n* PUT\n* DELETE\n\n### Body and content type\n\nAll requests that accept\
+    \ a body require passing in JSON formatted data with the `Content-Type` header\
+    \ set to `application/json`.\n\nGET requests do not require passing formatted\
+    \ data in the request payload. However, some GET operations allow you to filter\
+    \ the results by providing additional path parameters or URL query strings (appended\
+    \ to the endpoint URL, e.g. `?limit=50`).\n\n## Responses\n\nEach response consists\
+    \ of a header and a body. The body is formatted based on the content type requested\
+    \ in the `Accept` header.\n\n**Note:** Enterprise PKI Manager API endpoints only\
+    \ support responses with a content type of `application/json`. Requests that use\
+    \ the `Accept` header to specify a different content type will fail.\n\n### Headers\n\
+    \nEach response includes a header with a response code based on [RFC 2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1.1)\
+    \ specifications.\n\n* HTTP codes in the **200-399** range describe a successful\
+    \ request. Response bodies for HTTP codes in this range include the response data\
+    \ associated with the operation.\n* HTTP codes in the **400+** range describe\
+    \ an error.\n\nUnsuccessful requests return a list with one or more `errors`.\
+    \ Each error object includes a `code` and a `message` describing the problem with\
+    \ the request.\n\n**Example error response**\n\n```JSON\n{\n  \"error\": {\n \
+    \   \"code\": \"no_access\",\n    \"message\": \"User has no access to the Business\
+    \ unit with id = xxxxx or such Business unit does not exist\"\n  }\n}\n```\n"
+  version: 1.0.0
+servers:
+- url: https://one.digicert.com/
+security:
+- ApiKeyAuth: []
+tags:
+- name: Service status
+  description: Integration-level APIs.
+- name: Seats
+  description: Manage seats (units) which are consumed with each unique certificate
+    enrollment.
+- name: Profiles
+  description: Manage administrator-configured enrollment profiles.
+- name: Enrollments
+  description: Manage administrator-configured certificate enrollment details.
+- name: Certificates
+  description: Manage certificates.
+- name: Reporting
+  description: Manage audit logs and event reporting.
+paths:
+  /mpki/api/v1/hello:
+    get:
+      tags:
+      - Service status
+      summary: Query service status
+      description: |
+        Use this endpoint to query service status and test connectivity to the API. A successful response indicates that the service is live.
+      responses:
+        "200":
+          description: Service is live
+          content:
+            text/plain;charset=utf-8:
+              schema:
+                type: string
+                enum:
+                - Hello from DigiCert ONE - Enterprise PKI Manager REST API!
+                x-content-type: text/plain;charset=utf-8
+              example: Hello from DigiCert ONE - Enterprise PKI Manager REST API!
+  /mpki/api/v1/health/extensive:
+    get:
+      tags:
+      - Service status
+      summary: Query service health
+      description: |
+        Use this endpoint to perform a health check to query service status. An authorized request returns either HTTP status 200 - "UP" or 500 - "DOWN".
+      responses:
+        "200":
+          description: UP - service is live
+          content:
+            text/plain;charset=utf-8:
+              schema:
+                type: string
+                enum:
+                - UP
+                x-content-type: text/plain;charset=utf-8
+              example: UP
+        "500":
+          description: DOWN - service is unavailable
+          content:
+            text/plain;charset=utf-8:
+              schema:
+                type: string
+                enum:
+                - DOWN
+                x-content-type: text/plain;charset=utf-8
+              example: DOWN
+  /mpki/api/v1/seat:
+    post:
+      tags:
+      - Seats
+      summary: Create seat
+      description: "Use this endpoint to create a new seat. Each seat decreases the\
+        \ number of allocated seats for the given seat type. This endpoint does not\
+        \ restore previously deleted seats—reusing deleted seat IDs results in the\
+        \ creation of a new seat with the previously deleted seat ID. \n\nEach unique\
+        \ seat ID represents only one active seat at any given time — duplicate seat\
+        \ IDs are not permitted. \n\n`seat_id` is the identifier for each seat — this\
+        \ must be unique within each business unit and for each seat type.\n\nThe\
+        \ `seat_type` parameter is optional. If no `seat_type` is specified, this\
+        \ defaults to `USER_SEAT`. Possible values for `seat_type.id` are `USER_SEAT`,\
+        \ `DEVICE_SEAT` and `SERVER_SEAT`. \n"
+      requestBody:
+        content:
+          application/json;charset=utf-8:
+            schema:
+              $ref: '#/components/schemas/v1_seat_body'
+            x-example:
+              seat_id: "{{ set seat_id=random_email }}"
+              seat_type:
+                id: USER_SEAT
+              email: "{{ seat_id }}"
+              business_unit_id: "{{ business_unit_id }}"
+      responses:
+        "201":
+          description: Seat details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatDetails'
+  /mpki/api/v1/seat/{seat_id}:
+    get:
+      tags:
+      - Seats
+      summary: Get seat by ID
+      description: |-
+        Use this endpoint to retrieve the details of a given seat ID. Seat IDs are unique for each `business_unit_id` and `seat_type`.
+        As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit.
+        The `seat_type` parameter is required. Possible values for `seat_type.id` are `USER_SEAT`, `DEVICE_SEAT` and `SERVER_SEAT`.
+      parameters:
+      - name: seat_id
+        in: path
+        description: Seat ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: some-seat-id@example.com
+        x-example: "{{ seat_id }}"
+      - name: business_unit_id
+        in: query
+        description: |
+          Business unit ID.
+
+          As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit.
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+        example: 8caedac5-8669-4f9a-8c42-44825d154577
+        x-example: "{{ business_unit_id }}"
+      - name: seat_type_id
+        in: query
+        description: Seat Type ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - USER_SEAT
+          - DEVICE_SEAT
+          - SERVER_SEAT
+      responses:
+        "200":
+          description: Seat details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              x-example:
+                seat_id: "{{ seat_id }}"
+                email: "{{ seat_id }}"
+    put:
+      tags:
+      - Seats
+      summary: Update seat
+      description: |-
+        Use this endpoint to update the details for a given seat ID. Include the seat details to be updated in the request body.
+        As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit.
+        The `seat_type` parameter is optional. If no `seat_type` is specified, this defaults to `USER_SEAT`. Possible values for `seat_type.id` are `USER_SEAT`, `DEVICE_SEAT` and `SERVER_SEAT`.
+      parameters:
+      - name: seat_id
+        in: path
+        description: Seat ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: some-seat-id@example.com
+        x-example: "{{ seat_id }}"
+      requestBody:
+        content:
+          application/json;charset=utf-8:
+            schema:
+              $ref: '#/components/schemas/seat_seat_id_body'
+            x-example:
+              email: "{{ seat_id }}"
+              business_unit_id: "{{ business_unit_id }}"
+              seat_type:
+                id: USER_SEAT
+      responses:
+        "204":
+          description: Updated seat details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatDetails'
+    delete:
+      tags:
+      - Seats
+      summary: Delete seat
+      description: |-
+        Use this endpoint to delete a given seat ID. Deleting the seat ID restores an available seat of the same type in your account.
+        As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit.
+        The `seat_type` parameter is required. Possible values for `seat_type.id` are `USER_SEAT`, `DEVICE_SEAT` and `SERVER_SEAT`.
+      parameters:
+      - name: seat_id
+        in: path
+        description: Seat ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: some-seat-id@example.com
+        x-example: "{{ seat_id }}"
+      - name: business_unit_id
+        in: query
+        description: Business unit ID
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+        example: 8f3764a4-678c-469d-8699-0308552ec256
+        x-example: "{{ business_unit_id }}"
+      - name: seat_type_id
+        in: query
+        description: Seat Type ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: USER_SEAT
+      responses:
+        "204":
+          description: Deleted seat details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatDetails'
+      x-priority: -1
+  /mpki/api/v1/seat-types:
+    get:
+      tags:
+      - Seats
+      summary: Get available seat types
+      description: Use this endpoint to fetch details about available seat types for
+        the account. Returns an array containing seat type details.
+      responses:
+        "200":
+          description: Seat types list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+                x-content-type: application/json
+              example:
+              - id: USER_SEAT
+                display_name: User seat
+              - id: DEVICE_SEAT
+                display_name: Device seat
+  /mpki/api/v1/enrollment:
+    post:
+      tags:
+      - Enrollments
+      summary: Create enrollment
+      description: "Use this endpoint to create a pending certificate enrollment,\
+        \ to be completed and submitted by the certificate end user. \n\nThe following\
+        \ enrollment details are required fields in the request body:\n\n`profile`\
+        \ — Certificate profile ID \n\n`seat` — Seat ID and seat email address \n\n\
+        `attributes` — Enrollment attributes, including certificate subject DN information,\
+        \ validity period, and CSR (if applicable)\n\nA custom `enrollment_code` can\
+        \ optionally be included in the request body. If no enrollment code is provided\
+        \ in the request, one will be generated and returned in the response body.\
+        \ \n\n`expiry_date` is an optional request body field. If no expiry_date is\
+        \ specified in the request, and the certificate profile has no set enrollment\
+        \ code validity period, the default value is 10 days. \n\n**Note:** This endpoint\
+        \ only accepts enrollment requests for certificate profiles with the `ENROLLMENT_CODE`\
+        \ authentication method. \n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/v1_enrollment_body'
+            example:
+              profile:
+                id: eb387733-ca74-4020-b432-9868ad8f1756
+              seat:
+                seat_id: some-seat-id@example.com
+                email: enrollment-email@example.com
+              attributes:
+                csr: MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ6tZ0djuKkuNDfDxj+7aIrtOaxIuyuweVwj1XGgjygY+mMVoanr1BsQfNf5rvqaifiUGNZo6UABx/GdoTPBPacU9lflKwcPNLuEO1nDz7Pwy7HmIsyAtqB24Yp62eyTmIEH+CdKXSSDVU36i9SS46CoHEpIeZeQ+8KfLTFYWVCCHOwL6NTemq/FrSynb3ygrG2HYFDMtSoMtOnhjYxdNxiu+JgoObu1diKuzsclHFwdb5SjQ+NA/UnVBs4FexnYohm8QnmLi0JdlgWaaXZbpNDe1B+ldjrEPBXq2GRbkSv6kdCnYPXNU9DWtWkJi+Oyi6IhCYngJCQC4Avgmy9s7Q8CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQAogbMdd7eoXJ8PfIdIjeJymIPCPKPVTwVCUkOa81SHKSkv/sBj059IeaNbBMHNjklWyiQd82Yto5VuyvQaw15ev44GGsDhdmmZJgT5rGb/F6pj5WNlN/WlLJMIf7OBim595I5KW93kKiYLoKPfCZN5Uxg+mZGcMmI3kyuSXlAf452ad3XMzgcll/S5uEXwDoshPYWa23Q0JZX7rTXb4oo0iG7+vxhrHy94HLAUcrUvM5OS83HZqbv34nenG+XZEU6HelJ/SS3z5yQBFbO7cennrp2IoquYANs83CwI4cm3OiXDQ4gfApf3htiztM44S7SXmwalLXVJmvSiwa7oV79j
+                subject:
+                  common_name: Ellen Ripley
+                  organization_name: Weyland-Yutani Corporation
+                  street_address:
+                  - 4490 Wines Lane
+                  postal_code: "89714"
+                  locality: Carson city
+                  state: NV
+                  country: US
+                validity:
+                  duration_unit: days
+                  duration_value: 366
+              enrollment_code: "662641677"
+              expiry_date: 2022-12-11 23:00:00
+            x-example:
+              profile:
+                id: "{{ profile_id.[0] }}"
+              seat:
+                seat_id: "{{ seat_id }}"
+                email: "{{ set enrollment_email=seat_id }}"
+              attributes:
+                subject:
+                  common_name: "{{ set common_name=random }}"
+                  organization_name: "{{ set org_name=random }}"
+      responses:
+        "201":
+          description: Enrollment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrollmentResponse'
+  /mpki/api/v1/enrollment/redeem:
+    post:
+      tags:
+      - Enrollments
+      summary: Redeem enrollment
+      description: "Use this endpoint to redeem a pending certificate enrollment.\
+        \ \n\nThe issued certificate is returned in the response body.\n\nThe following\
+        \ enrollment details are required fields in the request body:\n\n`profile`\
+        \ — Certificate profile ID \n\n`seat` — Seat ID\n\n`enrollment_code` — The\
+        \ enrollment code which was provided by the administrator, or generated automatically,\
+        \ when the enrollment was created.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/enrollment_redeem_body'
+            example:
+              seat:
+                id: some-seat-id@example.com
+              profile:
+                id: 47380f83-1ff5-4def-9cd6-1b90bd15566d
+              enrollment_code: "662641677"
+              csr: MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ6tZ0djuKkuNDfDxj+7aIrtOaxIuyuweVwj1XGgjygY+mMVoanr1BsQfNf5rvqaifiUGNZo6UABx/GdoTPBPacU9lflKwcPNLuEO1nDz7Pwy7HmIsyAtqB24Yp62eyTmIEH+CdKXSSDVU36i9SS46CoHEpIeZeQ+8KfLTFYWVCCHOwL6NTemq/FrSynb3ygrG2HYFDMtSoMtOnhjYxdNxiu+JgoObu1diKuzsclHFwdb5SjQ+NA/UnVBs4FexnYohm8QnmLi0JdlgWaaXZbpNDe1B+ldjrEPBXq2GRbkSv6kdCnYPXNU9DWtWkJi+Oyi6IhCYngJCQC4Avgmy9s7Q8CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQAogbMdd7eoXJ8PfIdIjeJymIPCPKPVTwVCUkOa81SHKSkv/sBj059IeaNbBMHNjklWyiQd82Yto5VuyvQaw15ev44GGsDhdmmZJgT5rGb/F6pj5WNlN/WlLJMIf7OBim595I5KW93kKiYLoKPfCZN5Uxg+mZGcMmI3kyuSXlAf452ad3XMzgcll/S5uEXwDoshPYWa23Q0JZX7rTXb4oo0iG7+vxhrHy94HLAUcrUvM5OS83HZqbv34nenG+XZEU6HelJ/SS3z5yQBFbO7cennrp2IoquYANs83CwI4cm3OiXDQ4gfApf3htiztM44S7SXmwalLXVJmvSiwa7oV79j
+              attributes:
+                subject:
+                  common_name: Ellen Ripley
+                  organization_name: Weyland-Yutani Corporation
+                  street_address:
+                  - 4490 Wines Lane
+                  postal_code: "89714"
+                  locality: Carson city
+                  state: NV
+                  country: US
+              validity:
+                unit: days
+                duration: 366
+            x-example:
+              profile:
+                id: "{{ profile_id.[0] }}"
+              seat:
+                id: "{{ seat_id }}"
+              enrollment_code: "{{ enrollment_code }}"
+              attributes:
+                subject:
+                  common_name: "{{ set common_name=random }}"
+                  organization_name: "{{ set org_name=random }}"
+      responses:
+        "200":
+          description: Certificate details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateResponse'
+              example:
+                serial_number: 48520A70B478D344E9F9A804D8370D0BBEFEC4F0
+                delivery_format: x509
+                certificate: "-----BEGIN CERTIFICATE-----\n•••\n•••\n•••\n-----END\
+                  \ CERTIFICATE-----      \n"
+  /mpki/api/v1/enrollment-details/:
+    get:
+      tags:
+      - Enrollments
+      summary: List enrollments
+      description: "Use this endpoint to list all pending certificate enrollments\
+        \ in your account. \n\nResults can be filtered using optional search and paging\
+        \ parameters, added as query tags. Append `?{query_parameter}=value` to the\
+        \ endpoint URL, separate multiple parameters with `&`. For example, `/mpki/api/v1/enrollment-details?account_id={account\
+        \ ID}&business_unit_id={business unit ID}`\n"
+      parameters:
+      - name: Search parameters
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/EnrollmentListParameters'
+      responses:
+        "200":
+          description: Enrollments list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublicEnrollmentDetails'
+                x-content-type: application/json
+  /mpki/api/v1/enrollment/{enrollmentCode}:
+    get:
+      tags:
+      - Enrollments
+      summary: Get enrollment details by enrollment code
+      description: "Use this endpoint to get enrollment details for a given enrollment\
+        \ code and seat ID. \n\n`seat_id` is a required query parameter to be included\
+        \ in requests to this endpoint. Append `?seat_id={seat ID}` to the endpoint\
+        \ URL, replace `{seat ID}` with the seat ID to be retrieved. \n"
+      parameters:
+      - name: enrollmentCode
+        in: path
+        description: Enrollment code received in enrollment creation response
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "662641677"
+      - name: seat_id
+        in: query
+        description: Seat ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: some-seat-id@example.com
+        x-example: "{{ set enrollment_email=seat_id }}"
+      responses:
+        "200":
+          description: Enrollment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrollmentResponse'
+  /mpki/api/v1/enrollment-details/{identifier}:
+    get:
+      tags:
+      - Enrollments
+      summary: Get enrollment details by ID
+      description: "Use this endpoint to get enrollment details for a given enrollment\
+        \ ID. \n\nThe unique enrollment ID is returned when the enrollment is created.\
+        \ The enrollment ID can also be retrieved from the enrollment details page\
+        \ in your account, or a list enrollments GET request.\n"
+      parameters:
+      - name: identifier
+        in: path
+        description: Enrollment ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: d6743d9a-fb67-4a64-a33e-8a3229d28cc4
+      responses:
+        "200":
+          description: Enrollment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEnrollmentDetails'
+              example:
+                seat_id: 216ead6e-b00e-4c7b-8074-e333b96fd254
+                status: created
+                email: email@example.com
+                created_at: 2020-10-30T11:34:25.834361
+                expires_at: 2020-11-09T11:34:25.704781
+                profile:
+                  id: 33333333-4444-5555-6666-777777777777
+                  name: Profile name
+                business_unit:
+                  id: 66666666-7777-8888-9999-000000000000
+                  name: USCSS Nostromo
+                seat:
+                  seat_id: some-seat-id@example.com
+                  seat_type: USER_SEAT
+                seat_id_mapping_value: COMMON_NAME
+                approved_by_current_user: true
+                comments: Some comments
+  /mpki/api/v1/profile:
+    get:
+      tags:
+      - Profiles
+      summary: List profiles
+      description: "Use this endpoint to list all available certificate profiles in\
+        \ the account. \n\nResults can optionally be limited to profiles bound to\
+        \ a specific API token — append the `api_token_id` to the endpoint URL as\
+        \ a query tag (`?api_token_id={id}`).\n"
+      parameters:
+      - name: api_token_id
+        in: query
+        description: Limit results to profiles bound to the given API token ID
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Certificate profiles list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArrayOfPublicProfilesResponse'
+                x-content-type: application/json
+  /mpki/api/v1/profile/{profile_id}:
+    get:
+      tags:
+      - Profiles
+      summary: Get profile by ID
+      description: "Use this endpoint to get the details for a given certificate profile\
+        \ ID. \n"
+      parameters:
+      - name: profile_id
+        in: path
+        description: Certificate profile ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: d6743d9a-fb67-4a64-a33e-8a3229d28cc4
+        x-example: "{{ profile_id.[0] }}"
+      responses:
+        "200":
+          description: Certificate profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicProfileResponse'
+              x-example:
+                id: "{{ profile_id.[0] }}"
+                name: "{{ profile_name }}"
+                business_unit_id: "{{ business_unit_id }}"
+                certificate: "#unquote#{{ stringify response.body.certificate }}#unquote#"
+  /mpki/api/v1/certificate:
+    post:
+      tags:
+      - Certificates
+      summary: Issue certificate
+      description: "Use this endpoint to issue a new certificate using the given certificate\
+        \ and profile details. \n\nInstant certificate issuance requires a certificate\
+        \ profile configured with `enrollment_method: rest_api` and `authentication_method:\
+        \ third_party_app`. \n\nAll Subject DN and SAN fields configured in the certificate\
+        \ profile with `REST Request` selected as the field value source and `Required`\
+        \ checked must be included in your request body. \n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/v1_certificate_body'
+            example:
+              profile:
+                id: 36f011b7-5fa1-4c6d-83f3-ee59c4d54bb0
+              seat:
+                seat_id: some-seat-id@example.com
+              csr: |
+                -----BEGIN CERTIFICATE REQUEST-----
+                •••
+                •••
+                •••
+                -----END CERTIFICATE REQUEST-----
+              validity:
+                unit: days
+                duration: 1
+              delivery_format: x509
+              include_ca_chain: false
+              attributes:
+                extensions:
+                  san:
+                    emails:
+                    - seat-email@example.com
+                    uris:
+                    - http://example.com
+                    - https://example.com
+                    dns_names:
+                    - www.example.com
+                    - example.com
+                    user_principal_names:
+                    - ellen.ripley@digicert.com
+                    ip_addresses:
+                    - 1.2.3.4
+                    - 1.2.3.5
+                    other_names:
+                      guid:
+                      - b4f5dc26-63f3-4157-83f5-729992ab10c0
+                      - "{6ba7b810-9dad-11d1-80b4-00c04fd430c8}"
+                      - 0x30313233343536373839616263646566
+                      raw_other_names:
+                      - oid: 1.2.3.4.5.0
+                        values:
+                        - label: CA ID for Canada
+                          value: CA:id/urn
+                        - label: Known quantity
+                          value: 28
+                      - oid: 1.2.3.4.5.1
+                        values:
+                        - label: CA ID for US
+                          value: CA:id/urn
+                    registered_ids:
+                    - 1.2.3.4.5
+                    - 1.2.3.4.6
+                subject:
+                  street_address:
+                  - 4490 Wines Lane
+                  country: US
+                  unstructured_name:
+                  - some large and
+                  - unstructured name
+                  locality: Carson city
+                  description:
+                  - some
+                  - description
+                  serial_number: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+                  organization_name: Weyland-Yutani Corporation
+                  state: UT
+                  common_name: Ellen Ripley
+                  domain_component:
+                  - domain
+                  - component
+                  postal_code: "84123"
+                  unstructured_address:
+                  - Some
+                  - unstructured
+                  - address
+                  organization_units:
+                  - some_ou
+                  unique_identifier: 3a3aeb976040eed5c5d3bfb6143b7814
+                  email: email@example.com
+            x-example:
+              profile:
+                id: "{{ profile_id.[1] }}"
+              seat:
+                seat_id: "{{ seat_id }}"
+              attributes:
+                extensions:
+                  x-replace: true
+                subject:
+                  x-replace: true
+                  street_address:
+                  - 2600 W Parkside Ave
+                  - Suite 500
+                  country: US
+                  locality: Lehi
+                  organization_name: Digicert-Inc.
+                  state: UT
+                  common_name: "{{ common_name }}"
+                  postal_code: "84123"
+      responses:
+        "201":
+          description: Certificate details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateResponse'
+              x-example:
+                serial_number: "{{ set serial_number=response.body.serial_number }}"
+                delivery_format: x509
+                certificate: "#unquote# {{ stringify response.body.certificate }}\
+                  \ #unquote#"
+  /mpki/api/v1/certificate/escrow/approve/{serial_number}:
+    post:
+      tags:
+      - Certificates
+      summary: Approve escrowed certificate recovery
+      description: |
+        Use this endpoint to approve a certificate recovery request for a given escrowed certificate serial number.
+
+        Certificate recovery approval requires the `RECOVER_EM_CERTIFICATE` user permission.
+      parameters:
+      - name: serial_number
+        in: path
+        description: Certificate serial number
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+      - name: thumbprint_sha256
+        in: query
+        description: Certificate thumbprint
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: ED9707A73630676168E3D531F622082B422CEEC1955706C1DC75AEEABDB80BCA
+        x-example: "{{ thumbprint_sha256 }}"
+      responses:
+        "200":
+          description: Certificate recovery approved
+        "404":
+          description: Certificate not found
+        "422":
+          description: Can't process request entity
+  /mpki/api/v1/certificate/{serial_number}/renew:
+    post:
+      tags:
+      - Certificates
+      summary: Renew certificate
+      description: "Use this endpoint to renew the certificate with the given serial\
+        \ number. \n\nOnly certificates from certificate profiles configured with\
+        \ `enrollment_method: rest_api` and `authentication_method: third_party_app`\
+        \ can be renewed using this endpoint. \n\nCertificates must be within the\
+        \ renewal period configured in the certificate profile (default is 30 days\
+        \ before expiration) to be eligible for renewal. \n"
+      parameters:
+      - name: serial_number
+        in: path
+        description: Certificate serial number
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+        x-example: "{{ serial_number }}"
+      - name: thumbprint_sha256
+        in: query
+        description: Certificate thumbprint
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: ED9707A73630676168E3D531F622082B422CEEC1955706C1DC75AEEABDB80BCA
+        x-example: "{{ thumbprint_sha256 }}"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/serial_number_renew_body'
+            example:
+              csr: MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ6tZ0djuKkuNDfDxj+7aIrtOaxIuyuweVwj1XGgjygY+mMVoanr1BsQfNf5rvqaifiUGNZo6UABx/GdoTPBPacU9lflKwcPNLuEO1nDz7Pwy7HmIsyAtqB24Yp62eyTmIEH+CdKXSSDVU36i9SS46CoHEpIeZeQ+8KfLTFYWVCCHOwL6NTemq/FrSynb3ygrG2HYFDMtSoMtOnhjYxdNxiu+JgoObu1diKuzsclHFwdb5SjQ+NA/UnVBs4FexnYohm8QnmLi0JdlgWaaXZbpNDe1B+ldjrEPBXq2GRbkSv6kdCnYPXNU9DWtWkJi+Oyi6IhCYngJCQC4Avgmy9s7Q8CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQAogbMdd7eoXJ8PfIdIjeJymIPCPKPVTwVCUkOa81SHKSkv/sBj059IeaNbBMHNjklWyiQd82Yto5VuyvQaw15ev44GGsDhdmmZJgT5rGb/F6pj5WNlN/WlLJMIf7OBim595I5KW93kKiYLoKPfCZN5Uxg+mZGcMmI3kyuSXlAf452ad3XMzgcll/S5uEXwDoshPYWa23Q0JZX7rTXb4oo0iG7+vxhrHy94HLAUcrUvM5OS83HZqbv34nenG+XZEU6HelJ/SS3z5yQBFbO7cennrp2IoquYANs83CwI4cm3OiXDQ4gfApf3htiztM44S7SXmwalLXVJmvSiwa7oV79j
+              validity:
+                unit: days
+                duration: 1
+              delivery_format: x509
+              include_ca_chain: false
+      responses:
+        "200":
+          description: Renewed certificate details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateResponse'
+              x-example:
+                serial_number: "{{ set serial_number=response.body.serial_number }}"
+                delivery_format: x509
+                certificate: "#unquote# {{ stringify response.body.certificate }}\
+                  \ #unquote#"
+  /mpki/api/v1/certificate-import:
+    post:
+      tags:
+      - Certificates
+      summary: Import certificate
+      description: "Use this endpoint to import external certificates into your account.\
+        \ External certificates are issued by an issuing CA which does not originate\
+        \ from your DigiCert ONE account. \n\nCertificates issued by an external issuing\
+        \ CA which has also been imported to your account are categorized as imported\
+        \ certificates and can be managed accordingly.\n\nImported certificates can\
+        \ be downloaded, revoked, suspended/resumed, and can make use of OCSP/CRL\
+        \ validation services in your account. \n\nCertificates issued by an issuing\
+        \ CA which has not been imported to your account are categorized as unmanaged\
+        \ certificates.\n\nUnmanaged certificates can be downloaded from your account,\
+        \ but no certificate lifecycle operations are available for unmanaged seats.\
+        \ \n\nCertificates imported with `revoked: true` and `reason: certificate_hold`\
+        \ will be imported with certificate_status `SUSPENDED`. \n\nRevoked certificates\
+        \ receive the certificate_status `REVOKED` when imported — any `reason` for\
+        \ revocation other than `certificate_hold` is replaced with `unspecified`.\
+        \ \n\nUnmanaged certificates cannot be suspended. \n"
+      parameters:
+      - name: trap_seat_duplicate_error
+        in: query
+        description: "If true, automatically appends the current timestamp to the\
+          \ seat ID value. This feature facilitates duplicate seat ID error handling.\
+          \ \n"
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+        example: "true"
+        x-example: "{{ trap_seat_duplicate_error }}"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/v1_certificateimport_body'
+            example:
+            - cert_type: x509
+              business_unit_id: 9d172259-6e0e-4bec-a9a2-9a147347613c
+              seat_id: some-seat-id@example.com
+              notes: Any note with a maximum of 255 characters
+              group_name: Any group
+              cert: MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ6tZ0djuKkuNDfDxj+7aIrtOaxIuyuweVwj1XGgjygY+mMVoanr1BsQfNf5rvqaifiUGNZo6UABx/GdoTPBPacU9lflKwcPNLuEO1nDz7Pwy7HmIsyAtqB24Yp62eyTmIEH+CdKXSSDVU36i9SS46CoHEpIeZeQ+8KfLTFYWVCCHOwL6NTemq/FrSynb3ygrG2HYFDMtSoMtOnhjYxdNxiu+JgoObu1diKuzsclHFwdb5SjQ+NA/UnVBs4FexnYohm8QnmLi0JdlgWaaXZbpNDe1B+ldjrEPBXq2GRbkSv6kdCnYPXNU9DWtWkJi+Oyi6IhCYngJCQC4Avgmy9s7Q8CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQAogbMdd7eoXJ8PfIdIjeJymIPCPKPVTwVCUkOa81SHKSkv/sBj059IeaNbBMHNjklWyiQd82Yto5VuyvQaw15ev44GGsDhdmmZJgT5rGb/F6pj5WNlN/WlLJMIf7OBim595I5KW93kKiYLoKPfCZN5Uxg+mZGcMmI3kyuSXlAf452ad3XMzgcll/S5uEXwDoshPYWa23Q0JZX7rTXb4oo0iG7+vxhrHy94HLAUcrUvM5OS83HZqbv34nenG+XZEU6HelJ/SS3z5yQBFbO7cennrp2IoquYANs83CwI4cm3OiXDQ4gfApf3htiztM44S7SXmwalLXVJmvSiwa7oV79j
+              revocation:
+                revoked: true
+                reason: key_compromise
+                revoke_date: 2022-04-21T00:00:00Z
+            x-example:
+            - cert_type: x509
+              business_unit_id: "{{ business_unit_id }}"
+              cert: MIID3zCCAsegAwIBAgIUSFIKcLR400Tp+agE2DcNC77+xPAwDQYJKoZIhvcNAQELBQAwga4xCzAJBgNVBAYTAlVTMRUwEwYDVQQIEwxSaG9kZSBJc2xhbmQxEzARBgNVBAcTClByb3ZpZGVuY2UxFjAUBgNVBAkTDTI4IERvZ2dvIExhbmUxDjAMBgNVBBETBTAyODI1MSQwIgYDVQQKDBtMJkggRG9ncyBHcm9vbWluZyBSSSBCcmFuY2gxJTAjBgNVBAMMHEwmSCBEb2dzIEdyb29taW5nIElTU1VJTkcgQ0EwHhcNMjEwMjA4MTk1MDA5WhcNMjIwMjA5MTk1MDA5WjAtMQ8wDQYDVQQKEwZMb2hpa2ExGjAYBgNVBAMTEVJ1c2xhbiBWYXJ0YXphcm92MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5qjB+XYv8NCKDSmGjsjJ9sCQ4YlEbMp7uL6h8MAFnnNHKnBwOWr5iA/18x8Q1Dk/imXinXnNkDzvfBe9dJ+R2a2AOPZJbwnjfYOuWw9i6YdXJuGePl4sr4iHThN0ApHWV5jyyZHH7+Oxe3NyN/5D27TRM/D+zxpd3Pqp6tGU1MWDsg1y27bnPkkxqH2KvSP0wDLj8fvNC9iXb/e48c5+ieIhHIIiuY4FxWW+xkK1P/46WJ7bETbOwGRaVgxbHy0IQ30h4rGV+0pC02uov2tnQzNJCuuuJ42/5ICfpMuxf4DjWqly/MjIYK9tEnXzKUkKlWxHXZ4K68oobwbUphxocwIDAQABo3UwczAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTlrlgaBLmN0jXiaQRtwbAEnqhoVTAfBgNVHSMEGDAWgBTQ8Rfw5wVAqX66X4qhB1XbkrZJaDAOBgNVHQ8BAf8EBAMCBeAwEwYDVR0lBAwwCgYIKwYBBQUHAwIwDQYJKoZIhvcNAQELBQADggEBAAODrOQUTJLMfYSdd1h++EoYbrf4/2Gl917XujnsiN3NKrBYSVEmChBADZvkTcC3kTqoLVXtMYUuDglH9u8ochdg/mrRPK/2TkTEgTUotM2S45zcDxaeLyKDkH1Wwl3SdXzFGqQlRJzMvbSs+RWZUjFWtVT+VxQyYoPOvUzdN07oI80E2GLe5432Y9rXFJEG904yYDy/tz+WiJ8mbcNCt/kvih3PeE37hCyZnZOHvBnc6O9GKX0c5hjsqcwwhqNhImHfOap2H4WHvdtCiaHMQ067Y4WErxVZUzBFkrOKXkgruOF5AdGORwUy6zt0jfSlX4wydpdum4fmvBHj/QqD8AM=
+              notes: Any note with a maximum of 255 characters
+              group_name: User certificates
+              revocation:
+                revoked: true
+                reason: key_compromise
+                revoke_date: 2020-04-21T00:00:00Z
+      responses:
+        "200":
+          description: Imported certificate details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_2'
+                x-content-type: application/json
+              example:
+              - cert_type: x509
+                issuing_ca: "CN=USCSS Nostromo, O=Weyland-Yutani, C=US"
+                seat:
+                  seat_id: Some seat ID
+                  type: IMPORTED_SEAT
+                import_status: SUCCESS
+                business_unit:
+                  id: 66666666-7777-8888-9999-000000000000
+                  name: USCSS Nostromo
+                cert_status: revoked
+              x-example:
+              - issuing_ca: EXTERNAL_CA
+                seat:
+                  type: UNMANAGED_SEAT
+                import_status: SUCCESS
+                cert_status: revoked
+                business_unit:
+                  id: "{{ business_unit_id }}"
+                  name: "{{ business_unit_name }}"
+  /mpki/api/v1/certificate-search:
+    get:
+      tags:
+      - Certificates
+      summary: Search certificates
+      description: "Use this endpoint to get a detailed list of certificates in your\
+        \ account.\n\nResults can be filtered using optional search and paging parameters\
+        \ appended to the endpoint URL as query tags (e.g. `?limit=10`). \n"
+      parameters:
+      - name: Search parameters
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/CertificateSearchParameters'
+      - name: Paging parameters
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/PagingParameters'
+      responses:
+        "200":
+          description: Certificate details list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+  /mpki/api/v1/certificate/{serial_number}:
+    get:
+      tags:
+      - Certificates
+      summary: Get certificate by serial number
+      description: "Use this endpoint to get the details of a given certificate serial\
+        \ number. \n"
+      parameters:
+      - name: serial_number
+        in: path
+        description: Certificate serial number
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+        x-example: "{{ serial_number }}"
+      responses:
+        "200":
+          description: Certificate details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCertificateDetails'
+              example:
+                profile:
+                  id: e0e635f1-d8b2-4d87-9b4f-4d123b0a5688
+                  name: Profile name
+                seat:
+                  seat_id: some-seat-id@example.com
+                business_unit:
+                  id: 57ff4149-16e9-4eef-8ac4-cc105216a736
+                  name: USCSS Nostromo
+                certificate: MIIEAjCCAuqgAwIBAgIUNPQQaK46eTi3qmv/7Y1yxpeTw/EwDQYJKoZIhvcNAQELBQAwYDELMAkGA1UEBhMCVVMxGDAWBgNVBAoTD0luIHF1aXMgZWEgNDkwMjE3MDUGA1UEAxMuRW5pbSBtb2xsaXQgbGFib3J1bSBldCBzdW50IExvcmVtIHVsbGFtY28gODM5NjAeFw0yMDEwMTMxMzU3NDdaFw0yMzEwMTMxMzU3NDdaMIGeMQswCQYDVQQGEwJVUzELMAkGA1UECBMCVVQxDTALBgNVBAcTBExlaGkxHDAaBgNVBAkTEzI2MDAgVyBQYXJrc2lkZSBBdmUxEjAQBgNVBAkTCVN1aXRlIDUwMDEOMAwGA1UEERMFODQxMjMxFjAUBgNVBAoTDURpZ2ljZXJ0LUluYy4xGTAXBgNVBAMTEHd3dy5kaWdpY2VydC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCerWdHY7ipLjQ3w8Y/u2iK7TmsSLsrsHlcI9VxoI8oGPpjFaGp69QbEHzX+a76mon4lBjWaOlAAcfxnaEzwT2nFPZX5SsHDzS7hDtZw8+z8Mux5iLMgLagduGKetnsk5iBB/gnSl0kg1VN+ovUkuOgqBxKSHmXkPvCny0xWFlQghzsC+jU3pqvxa0sp298oKxth2BQzLUqDLTp4Y2MXTcYrviYKDm7tXYirs7HJRxcHW+Uo0PjQP1J1QbOBXsZ2KIZvEJ5i4tCXZYFmml2W6TQ3tQfpXY6xDwV6thkW5Er+pHQp2D1zVPQ1rVpCYvjsouiIQmJ4CQkAuAL4JsvbO0PAgMBAAGjdTBzMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFFhZNpvCR4aoNpDduDAXvumFwnpfMB8GA1UdIwQYMBaAFEJhC3L32WQo7TuFiDWd5S5CuYJvMA4GA1UdDwEB/wQEAwIF4DATBgNVHSUEDDAKBggrBgEFBQcDAjANBgkqhkiG9w0BAQsFAAOCAQEAaC+01abAPpnxasenVsHjyN0OpAEKMPaxqotG1+JCMMExiugbzd5wrp9HPCGQrkxEXUpWOz6aYdLuYJcii4IZV2/dmnj3eVIXRK/mMyUsrXAr2JSC9LgYkUo/CJ71aCnMF5JPc8Kbe0VETUzzV2A5rfGecpm1p5C7IazqdygOTHFqLYYvSevgPAad7+yQaqh3RLO2CyYXYHXGzf+k/J6p5o7XdhUnFF66G45eZMs4cP1IkGNl/xRZ17gU/qq1skVP5VUnUzVZVNObFQNyfWR/zxLOfsPDGrHovux9A8nh776yUJzRDQDKr2SSTd2nPn1h+UH6BWNhU2wS79+ALuZ12w==
+                common_name: Ellen Ripley
+                status: revoked
+                serial_number: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+                valid_from: 2019-01-01T00:00:00Z
+                valid_to: 2029-01-01T00:00:00Z
+                revocation:
+                  reason: key_compromise
+                  revocation_date: 2010-04-21T00:00:00Z
+                  comments: Revocation Comment
+              x-example:
+                common_name: "{{ common_name }}"
+                serial_number: "{{ serial_number }}"
+                profile:
+                  id: "{{ profile_id.[1] }}"
+                  name: "{{ profile_name.[1] }}"
+                business_unit:
+                  id: "{{ business_unit_id }}"
+                  name: "{{ business_unit_name }}"
+                seat:
+                  seat_id: "{{ seat_id }}"
+                status: issued
+                revocation:
+                  x-replace: true
+                valid_from: "{{ response.body.valid_from }}"
+                valid_to: "{{ response.body.valid_to }}"
+  /mpki/api/v1/certificate/escrow/recover/{serial_number}:
+    get:
+      tags:
+      - Certificates
+      summary: Recover escrowed certificate by serial number
+      description: "Use this endpoint to recover an escrowed certificate by the given\
+        \ serial number. \n"
+      parameters:
+      - name: serial_number
+        in: path
+        description: Certificate serial number
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+        x-example: "{{ serial_number }}"
+      - name: include_chain
+        in: query
+        description: "If true, include CA certificates in response"
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Recovered certificate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateResponse'
+              example:
+                delivery_format: PKCS12
+                certificate: MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5\
+                  IEx0ZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ6tZ0djuKkuNDfDxj+7aIrtOaxIuyuweVwj1XGgjygY+mMVoanr1BsQ\
+                  fNf5rvqaifiUGNZo6UABx/GdoTPBPacU9lflKwcPNLuEO1nDz7Pwy7HmIsyAtqB24Yp62eyTmIEH+CdKXSSDVU36i9SS46CoHEpIeZeQ\
+                  +8KfLTFYWVCCHOwL6NTemq/FrSynb3ygrG2HYFDMtSoMtOnhjYxdNxiu+JgoObu1diKuzsclHFwdb5SjQ+NA/UnVBs4FexnYohm8QnmL\
+                  i0JdlgWaaXZbpNDe1B+ldjrEPBXq2GRbkSv6kdCnYPXNU9DWtWkJi+Oyi6IhCYngJCQC4Avgmy9s7Q8CAwEAAaAAMA0GCSqGSIb3DQEB\
+                  CwUAA4IBAQAogbMdd7eoXJ8PfIdIjeJymIPCPKPVTwVCUkOa81SHKSkv/sBj059IeaNbBMHNjklWyiQd82Yto5VuyvQaw15ev44GGsDh\
+                  dmmZJgT5rGb/F6pj5WNlN/WlLJMIf7OBim595I5KW93kKiYLoKPfCZN5Uxg+mZGcMmI3kyuSXlAf452ad3XMzgcll/S5uEXwDoshPYWa\
+                  23Q0JZX7rTXb4oo0iG7+vxhrHy94HLAUcrUvM5OS83HZqbv34nenG+XZEU6HelJ/SS3z5yQBFbO7cennrp2IoquYANs83CwI4cm3OiXD\
+                  Q4gfApf3htiztM44S7SXmwalLXVJmvSiwa7oV79j
+                pkcs12Password: "m2JHh{e)?<vAAHQr"
+  /mpki/api/v1/certificate/{serial_number}/revoke:
+    put:
+      tags:
+      - Certificates
+      summary: Revoke certificate
+      description: "Use this endpoint to revoke a certificate by serial number. \n\
+        \nInclude the `revocation_reason` in the request body — accepted values are:\
+        \ \n\n`unspecified`, `key_compromise`, `ca_compromise`, `affiliation_changed`,\
+        \ `superseded`, `cessation_of_operation`, `certificate_hold`, `remove_from_crl`,\
+        \ `privilege_withdrawn`, or `aa_compromise` . \n\n**Note:** If multiple certificates\
+        \ with the same serial number exist in your account, an error response with\
+        \ the message **\"Collision occurred! Please specify additional parameter:\
+        \ thumbprint_sha256\"** is returned. Retry the request with the SHA256 thumbprint\
+        \ of the certificate passed as a query tag (append `?thumbprint_sha256={your\
+        \ thumbprint}` to the endpoint URL).\n"
+      parameters:
+      - name: serial_number
+        in: path
+        description: Certificate serial number
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+        x-example: "{{ serial_number }}"
+      - name: thumbprint_sha256
+        in: query
+        description: Certificate thumbprint
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: ED9707A73630676168E3D531F622082B422CEEC1955706C1DC75AEEABDB80BCA
+        x-example: "{{ thumbprint_sha256 }}"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/serial_number_revoke_body'
+            example:
+              revocation_reason: certificate_hold
+      responses:
+        "204":
+          description: No content — certificate revoked
+    delete:
+      tags:
+      - Certificates
+      summary: Resume suspended certificate
+      description: "Use this endpoint to resume the previously suspended certificate\
+        \ with the given serial number. \n"
+      parameters:
+      - name: serial_number
+        in: path
+        description: Certificate serial number
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+        x-example: "{{ serial_number }}"
+      responses:
+        "204":
+          description: No content — certificate resumed
+  /mpki/api/v1/report/enrollment-code:
+    get:
+      tags:
+      - Reporting
+      summary: Get enrollment code report
+      description: "Use this endpoint to get a report of all enrollment code events.\
+        \ \n\nResults can optionally be filtered using search and paging parameters\
+        \ appended to the endpoint URL (as query tags), e.g. `?create_date=22-02-2022`.\
+        \ \n"
+      parameters:
+      - name: Paging parameters
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/PagingParameters'
+      - name: Search parameters
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/ReportSearchParams'
+      responses:
+        "200":
+          description: Enrollment code report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+  /mpki/api/v1/audit-log:
+    get:
+      tags:
+      - Reporting
+      summary: List audit logs
+      description: "Use this endpoint to get all available audit log entries in your\
+        \ account. \n\nResults can optionally be filtered using search and paging\
+        \ parameters appended to the endpoint URL (as query tags), e.g. `?create_date=22-02-2022`.\
+        \ \n\nFilters for audit log data fields can also be applied to results using\
+        \ this format: `?data[resource_type]=enrollment`. For example, `?data[thumbprint]=12143A4E7XXX2C589EE8AE3C86321B85CA7271328XXX1C9C836935D45XXXBE9X`.\n"
+      parameters:
+      - name: Paging parameters
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/PagingParameters'
+      - name: Search parameters
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/LogSearchParameters'
+      responses:
+        "200":
+          description: List of audit logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+  /mpki/api/v1/audit-log/{id}:
+    get:
+      tags:
+      - Reporting
+      summary: Get audit log event by ID
+      description: "Use this endpoint to get the details of a given audit log event\
+        \ ID. \n"
+      parameters:
+      - name: id
+        in: path
+        description: "Audit log event ID (displayed in the audit event details on\
+          \ UI, and in audit logs list response)"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/UUID'
+        example: efcd5341-0fca-4fa3-9bc8-52e63c37e345
+      responses:
+        "200":
+          description: Audit log event details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogItem'
+      x-ignored: true
+components:
+  schemas:
+    ErrorResponse:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ErrorResponseWithField:
+      required:
+      - field
+      - message
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        field:
+          type: string
+    UUID:
+      pattern: "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+      type: string
+      description: Entity ID in UUID format
+      format: uuid
+    UUIDs:
+      pattern: "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(,[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})*$"
+      type: string
+      description: One or more Entity ID in UUID format with comma separation
+    IdDto:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      example:
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    NameDto:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+      example:
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    SeatDetails:
+      type: object
+      properties:
+        seat_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+      example:
+        email: real-user-email@example.com
+        seat_name: Valerie R Green
+        phone: 401-766-4576
+    PublicProfileFieldSource:
+      type: object
+      properties:
+        mandatory:
+          type: boolean
+          description: "If true, the source is mandatory"
+        source:
+          type: string
+          description: Source of the attribute
+        value:
+          type: object
+          description: Permanent attribute value if source is `FIXED_VALUE`
+        custom_value:
+          type: object
+          description: Permanent custom Other name value if source is `FIXED_VALUE`
+        saml_assertion_key:
+          type: string
+          description: SAML attribute mapping value
+        ad_attribute_key:
+          type: string
+          description: Active Directory attribute mapping value
+    PublicProfileField:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Attribute type
+        mandatory:
+          type: boolean
+          description: "If true, the attribute is mandatory"
+        multiple:
+          type: boolean
+          description: "If true, the attribute can have multiple values"
+        sources:
+          $ref: '#/components/schemas/PublicProfileFieldSource'
+    ProfileEnrollmentMethod:
+      type: string
+      enum:
+      - digicert_desktop_client
+      - android
+      - browser_pkcs12
+      - csr
+      - est
+      - ios
+      - os_browser
+      - pki_client
+      - rest_api
+      - scep
+    ProfileAuthenticationMethod:
+      type: string
+      enum:
+      - third_party_app
+      - active_directory
+      - certificate_authentication
+      - enrollment_code
+      - global_passphrase
+      - manual_approval
+      - saml_idp
+    KeyEscrowPolicy:
+      type: object
+      properties:
+        key_escrow_enabled:
+          type: boolean
+    CaResponse:
+      type: object
+      properties:
+        serial_number:
+          type: string
+          description: Issuer serial number
+        subject_dn:
+          type: string
+          description: Issuer subject dn
+        certificate:
+          type: string
+          description: Base-64 encoded issuer certificate
+        root:
+          type: boolean
+          description: Flag indicating whether its a root certificate
+        chain:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaResponse'
+      example:
+        serial_number: "254554466396905590377942608199604315083804010285"
+        subject_dn: "CN=USCSS Nostromo, O=Weyland-Yutani, C=US"
+        certificate: MIIDxDCCAqygAwIBAgIUPL6z9BNmnixVQxWMTV/cpZ13qw0wDQYJKoZIhvcNAQELBQAwZjELMAkGA1UEBhMCVVMxKDAmBgNVBAoTH0F1dGUgdmVsaXQgdWxsYW1jbyBkZXNlcnVudCAyODUxLTArBgNVBAMTJEluY2lkaWR1bnQgbnVsbGEgYWRpcGlzaWNpbmcgdXQgMzc3NDAeFw0yMDEwMTIxNjQ3NTRaFw00MDEwMTIxNjQ3NTNaMG0xCzAJBgNVBAYTAlVTMTYwNAYDVQQKEy1Qcm9pZGVudCBuaXNpIGNpbGx1bSBzaXQgaXBzdW0gZXhjZXB0ZXVyIDgzMjUxJjAkBgNVBAMTHUFkIG9jY2FlY2F0IHZlbmlhbSBMb3JlbSAxNTgzMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx2YtUSOj2E9w8aFHJOcZA2HC7Z6n5jszV/ANJVy9I34o1zheNO1OdSwOOfUiZw3WW1zUfkmWrmuNdfGGaO0BlO3DlTo5YvMlHvyIWs4GtMNic28EtYDQWecG8gnkv1dzSR0NLjllANBHi7mhJ2YddC1C028lglvrSDLE04MX4MPPC7mFiMZQUnKWRwH5NukX8A/zMWbhKkGI+58Ice/pYE7nGevwISz9aFCLV3qEtAfoPgabPix1UpOWtt68thqKfhtFmC5s4eo8PgMHdMVa3YjShywGVLFokz/frE7+JFut/HDpD9vWxEIXbGDx1HflKGywULir1gGat5cO9/2EUwIDAQABo2MwYTAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQ/yXB+PxddH6PZwOJRqqQW5XNGUzAfBgNVHSMEGDAWgBTiNHUGncGvrZYYYhnk5DMXi4mEWzAOBgNVHQ8BAf8EBAMCAYYwDQYJKoZIhvcNAQELBQADggEBAJG0jdItt8075LAUJAniaYxLTcL03NWFeKCZeHx2DTkc7klaAnYx6E7akRyzXYuFewxZjNgd5HnOLFIQqvFMMBTaHkW+iHytL+z1algGPdnlk788yl0U0T1kXcev4/BZzcBpzLQIM1fKlHQY6LXd5N/8Jfh/SF4qrlSsdW2+Eva1iR8eE1ld85y4NbAsSiQWQ2meAmgEfAhSkWV2KflDpvgnqPQoIvMIPP7U7DSp0ArHRGi7JN97VmB5vaSaUkbKKRi4EkHnL1J2OcbdU/YhqteKHttoQsUbTZMHoMRT0RGM6qla8zTwEVbYgM46X1wTPgOsj3grfhMP2UqIQ/N3bXI=
+        root: false
+    PublicProfileResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          description: Profile name
+        status:
+          type: string
+          description: Profile status
+          enum:
+          - Active
+          - Deleted
+        signature_algorithm:
+          type: string
+          description: Signature algorithm for certificates issued from the profile
+          enum:
+          - SHA1_WITH_RSA
+          - SHA256_WITH_RSA
+          - SHA384_WITH_RSA
+          - SHA512_WITH_RSA
+          - SHA256_WITH_ECDSA
+          - SHA384_WITH_ECDSA
+          - SHA512_WITH_ECDSA
+          - MATCH_ISSUER
+        publish_to_public_directory:
+          type: boolean
+          description: "If true, certificate public key is published to the DigiCert\
+            \ PKI directory"
+        renewal_period_days:
+          type: integer
+          description: Number of days before expiration in which the certificate can
+            be renewed
+        duplicate_cert_policy:
+          type: boolean
+          description: "If true, certificate profile allows duplicate certificates"
+        override_cert_validity_via_api:
+          type: boolean
+          description: "If true, the default validity period set by the profile can\
+            \ be overridden using a request parameter"
+        certificate_delivery_format:
+          type: string
+          description: Format for certificate delivery specified in the profile
+          enum:
+          - PKCS7
+          - X509
+        business_unit_id:
+          type: string
+          description: Business unit ID to which the profile belongs
+        enrollment_method:
+          $ref: '#/components/schemas/ProfileEnrollmentMethod'
+        authentication_method:
+          $ref: '#/components/schemas/ProfileAuthenticationMethod'
+        key_escrow_policy:
+          $ref: '#/components/schemas/KeyEscrowPolicy'
+        private_key_attributes:
+          $ref: '#/components/schemas/PublicProfileResponse_private_key_attributes'
+        api_token_binding_enabled:
+          type: boolean
+          description: "If true, use of the certificate profile is restricted to a\
+            \ specific API token"
+        api_token_id:
+          type: string
+          description: API token ID to which the profile is bound if api_token_binding_enabled
+            is true
+        certificate:
+          $ref: '#/components/schemas/PublicProfileResponse_certificate'
+      example:
+        id: d6743d9a-fb67-4a64-a33e-8a3229d28cc4
+        name: Profile name
+        status: Active
+        signature_algorithm: SHA256_WITH_RSA
+        publish_to_public_directory: false
+        renewal_period_days: 30
+        duplicate_cert_policy: false
+        override_cert_validity_via_api: true
+        certificate_delivery_format: PKCS7
+        business_unit_id: e5bf49f0-a77b-4301-85e9-c15eb12df70f
+        enrollment_method: csr
+        authentication_method: enrollment_code
+        private_key_attributes:
+          key_size: "2048"
+        key_escrow_policy:
+          key_escrow_enabled: false
+        api_token_binding_enabled: true
+        api_token_id: 8517a493-ef6a-405e-85f1-eecd538e7692
+        certificate:
+          subject:
+            attributes:
+            - type: common_name
+              mandatory: true
+              multiple: false
+              sources:
+              - mandatory: true
+                source: ENTERED_BY_USER_DURING_ENROLLMENT
+                ad_attribute_key: cn
+            - type: domain_component
+              mandatory: true
+            - type: organization_name
+              mandatory: true
+              multiple: false
+              source:
+              - mandatory: false
+                source: UPLOADED_BY_ADMIN
+            - type: street_address
+              mandatory: true
+              multiple: false
+              source:
+              - mandatory: false
+                source: AD_ATTRIBUTE
+                ad_attribute_key: streetAddress
+              - mandatory: true
+                source: FIXED_VALUE
+                value: 20 Cooper Square
+            - type: country
+              mandatory: true
+            - type: locality
+              mandatory: true
+            - type: state
+              mandatory: true
+            - type: postal_code
+              mandatory: true
+          validity:
+            unit: days
+            duration: 365
+          extensions:
+            san:
+              critical: false
+              attributes: []
+          issuer:
+            serial_number: "254554466396905590377942608199604315083804010285"
+            subject_dn: "CN=USCSS Nostromo, O=Weyland-Yutani, C=US"
+            certificate: |
+              -----BEGIN CERTIFICATE-----
+              •••
+              •••
+              •••
+              -----END CERTIFICATE-----
+            root: false
+            chain:
+            - serial_number: "254554466396905590377942608199604315083804010285"
+              subject_dn: "CN=The Company, O=Weyland-Yutani, C=US"
+              certificate: |
+                -----BEGIN CERTIFICATE-----
+                •••
+                •••
+                •••
+                -----END CERTIFICATE-----
+              root: true
+    ArrayOfPublicProfilesResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicProfileResponse'
+      x-schema-name: ArrayOfPublicProfilesResponse
+    Validity:
+      type: object
+      properties:
+        unit:
+          type: string
+          description: Validity unit
+          enum:
+          - years
+          - months
+          - days
+          - hours
+          - minutes
+        duration:
+          type: integer
+          description: Number of validity unit
+      description: Validity unit
+      example:
+        unit: days
+        duration: 365
+    DeliveryFormat:
+      type: string
+      enum:
+      - x509
+      - PKCS7
+    CertificateResponse:
+      type: object
+      properties:
+        serial_number:
+          type: string
+        delivery_format:
+          $ref: '#/components/schemas/DeliveryFormat'
+        certificate:
+          type: string
+        pkcs12Password:
+          type: string
+      example:
+        serial_number: 4099ABF9C1BB7C02BBE1CDC7836CA9D58A71C2A5
+        delivery_format: x509
+        certificate: |
+          -----BEGIN CERTIFICATE-----
+          •••
+          •••
+          •••
+          -----END CERTIFICATE-----
+    CertificateAttributes:
+      type: object
+      properties:
+        subject:
+          $ref: '#/components/schemas/PublicProfileResponse_certificate_subject'
+        extensions:
+          $ref: '#/components/schemas/CertificateExtensions'
+    CertificateExtensions:
+      type: object
+      properties:
+        san:
+          $ref: '#/components/schemas/CertificateExtensions_san'
+    CertificateSearchParameters:
+      type: object
+      properties:
+        account_id:
+          type: string
+          format: uuid
+        business_unit_id:
+          type: string
+          format: uuid
+        business_unit_name:
+          type: string
+        profile_id:
+          type: string
+          format: uuid
+        seat_id:
+          type: string
+        seat_type_id:
+          type: string
+          enum:
+          - USER_SEAT
+          - DEVICE_SEAT
+          - SERVER_SEAT
+          - IMPORTED_SEAT
+          - UNMANAGED_SEAT
+        valid_from:
+          type: string
+          description: Limit results to certificates issued after specified date value
+        valid_to:
+          type: string
+          description: Limit results to certificates expiring before specified date
+            value
+        serial_number:
+          type: string
+          format: binary
+        common_name:
+          type: string
+        aki:
+          type: string
+          description: Certificate Authority Key Identifier
+        issuing_ca_id:
+          type: string
+          format: uuid
+        issuing_ca_name:
+          type: string
+        issuing_ca_serial_number:
+          type: string
+          format: binary
+        status:
+          type: string
+          enum:
+          - ISSUED
+          - EXPIRED
+          - REVOKED
+          - SUSPENDED
+        thumbprint:
+          type: string
+          description: SHA256 thumbprint of the certificate
+          format: binary
+    PagingParameters:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+    PaginationResult:
+      required:
+      - items
+      - limit
+      - offset
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+        offset:
+          type: integer
+        limit:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+    ExternalEnrollmentReport:
+      type: object
+      properties:
+        seat:
+          $ref: '#/components/schemas/NameDto'
+        seat_type:
+          type: string
+          description: Type of Seat to which this Enrollment is linked
+        profile_name:
+          type: string
+          description: Name of Profile against which Enrollment was issued
+        bu_name:
+          type: string
+          description: Name of Business unit to which Enrollment is linked
+        subject:
+          type: string
+          description: Subject of Enrollment
+        enrollment_status:
+          type: string
+          description: Current status of Enrollment
+          enum:
+          - created
+          - pending
+          - pending_second_approval
+          - in_progress
+          - expired
+          - approved
+          - rejected
+          - locked
+          - redeemed
+        create_date:
+          type: string
+          description: Date when Enrollment was created in format YYYY-MM-DD
+          format: date
+          example: 2022-04-15
+        expiry_date:
+          type: string
+          description: Date when Enrollment should be (was) expired in format YYYY-MM-DD
+          format: date
+          example: 2022-04-15
+        redeem_date:
+          type: string
+          description: Date when Enrollment was redeemed in format YYYY-MM-DD
+          format: date
+          example: 2022-04-15
+        reject_date:
+          type: string
+          description: Date when Enrollment was rejected in format YYYY-MM-DD
+          format: date
+          example: 2022-04-15
+        last_edit_date:
+          type: string
+          description: Date when Enrollment was last edited in format YYYY-MM-DD
+          format: date
+          example: 2022-04-15
+        last_edit_admin:
+          $ref: '#/components/schemas/NameDto'
+    EnrollmentReport:
+      type: object
+      properties:
+        seat:
+          $ref: '#/components/schemas/NameDto'
+        seatType:
+          type: string
+          description: Type of Seat to which this Enrollment is linked
+        profileName:
+          type: string
+          description: Name of Profile against which Enrollment was issued
+        buName:
+          type: string
+          description: Name of Business unit to which Enrollment is linked
+        subject:
+          type: string
+          description: Subject of Enrollment
+        enrollmentStatus:
+          type: string
+          description: Current status of Enrollment
+          enum:
+          - created
+          - pending
+          - pending_second_approval
+          - in_progress
+          - expired
+          - approved
+          - rejected
+          - locked
+          - redeemed
+        createDate:
+          type: string
+          description: Date when Enrollment was created in format YYYY-MM-DD
+          format: date
+          example: 2021-04-15
+        expiryDate:
+          type: string
+          description: Date when Enrollment should be (was) expired in format YYYY-MM-DD
+          format: date
+          example: 2021-04-15
+        redeemDate:
+          type: string
+          description: Date when Enrollment was redeemed in format YYYY-MM-DD
+          format: date
+          example: 2021-04-15
+        rejectDate:
+          type: string
+          description: Date when Enrollment was rejected in format YYYY-MM-DD
+          format: date
+          example: 2021-04-15
+        lastEditDate:
+          type: string
+          description: Date when Enrollment was last edited in format YYYY-MM-DD
+          format: date
+          example: 2021-04-15
+        lastEditAdmin:
+          $ref: '#/components/schemas/NameDto'
+    CertificateReport:
+      type: object
+      properties:
+        certificateId:
+          $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          description: Current status of Certificate
+          enum:
+          - issued
+          - revoked
+          - expired
+          - suspended
+        seatType:
+          type: string
+          description: "Type of Seat for which Certificate was issued (User, Server,\
+            \ Device, etc)"
+        issuer:
+          type: string
+          description: ID of issuing CA
+        root:
+          type: string
+          description: ID of root CA
+        revocationDate:
+          type: string
+          description: Certificate revocation date in format YYYY-MM-DDTHH-MM-SS
+          example: 2021-04-15T11:00:00
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          description: Certificate attributes as key-value map
+    AuditLogItem:
+      type: object
+      properties:
+        id:
+          type: string
+        account:
+          $ref: '#/components/schemas/AuditLogItem_account'
+        business_unit:
+          $ref: '#/components/schemas/AuditLogItem_account'
+        resource_type:
+          type: string
+        resource_id:
+          type: string
+        action:
+          type: string
+        user:
+          $ref: '#/components/schemas/mpkiapiv1certificateimport_business_unit_id'
+        timestamp:
+          type: string
+          format: date-time
+        description:
+          type: string
+        status:
+          type: string
+        data:
+          type: string
+      example:
+        data: data
+        resource_type: resource_type
+        resource_id: resource_id
+        action: action
+        description: description
+        id: id
+        business_unit: null
+        user:
+          name: name
+          id: id
+        account:
+          id: id
+        timestamp: 2000-01-23T04:56:07.000+00:00
+        status: status
+    PublicCertificateDetails:
+      type: object
+      properties:
+        profile:
+          $ref: '#/components/schemas/NameDto'
+        seat:
+          $ref: '#/components/schemas/mpkiapiv1certificate_seat'
+        account:
+          $ref: '#/components/schemas/IdDto'
+        business_unit:
+          $ref: '#/components/schemas/NameDto'
+        certificate:
+          type: string
+        common_name:
+          type: string
+        status:
+          type: string
+          enum:
+          - issued
+          - revoked
+          - expired
+          - suspended
+        serial_number:
+          type: string
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+        notes:
+          type: string
+        revocation:
+          $ref: '#/components/schemas/PublicCertificateDetails_revocation'
+        thumbprint:
+          type: string
+      example:
+        notes: notes
+        profile:
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        certificate: certificate
+        thumbprint: thumbprint
+        valid_from: 2000-01-23
+        serial_number: serial_number
+        business_unit: null
+        seat:
+          seat_id: seat_id
+        revocation:
+          reason: reason
+          comments: comments
+          revocation_date: 2000-01-23
+        valid_to: 2000-01-23
+        common_name: common_name
+        account:
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        status: issued
+    PublicEnrollmentDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Enrollment internal id
+        status:
+          type: string
+          description: Status of the enrollment
+        email:
+          type: string
+          description: Email used to enroll
+        created_at:
+          type: string
+          description: Creation date/time of the enrollment
+        expires_at:
+          type: string
+          description: Expiry date/time of the enrollment
+        profile:
+          $ref: '#/components/schemas/NameDto'
+        business_unit:
+          $ref: '#/components/schemas/NameDto'
+        message_to_user:
+          type: string
+          description: A message sent to user by admin
+        seat_id_mapping_value:
+          type: string
+          description: Value used as seat id mapping
+        approved_by_current_user:
+          type: boolean
+          description: Whether this particular enrollment has been approved by the
+            current user
+        seat:
+          $ref: '#/components/schemas/PublicEnrollmentDetails_seat'
+        comments:
+          type: string
+          description: Comments to the enrollment
+      example:
+        seat:
+          seat_type: seat_type
+          seat_id: seat_id
+        expires_at: expires_at
+        comments: comments
+        seat_id_mapping_value: seat_id_mapping_value
+        profile:
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        approved_by_current_user: true
+        created_at: created_at
+        id: id
+        business_unit: null
+        email: email
+        status: status
+        message_to_user: message_to_user
+    AeConfigResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "Name of AE Config, used for filename"
+          example: DigiCert-AE-20220117_072135.cfg
+        profile_ids:
+          type: array
+          description: Array of Profile IDs included in AE Config
+          example:
+          - 00000000-1111-2222-3333-444444444444
+          items:
+            type: string
+        generation_date_time:
+          type: string
+          description: Generation date/time of the AE Config
+          example: 2022-01-17T07:21:35.067258Z
+        ae_config:
+          type: string
+          description: AE Config with Windows style line endings (\r\n)
+          example: "#====================\r\nActionRequestType: AE-Server-Config\r\
+            \nCAList[1]: \r\nDigiCert Inc. Test Intermediate CA\r\nMustCheckRequestor:\
+            \ true\r\nCrlRefreshIntervalHours: 24\r\nPKIRefreshIntervalSeconds: 20\r\
+            \nCAProcessingWaitTimeSeconds: 60\r\n#END of AE Server Section\r\n\r\n\
+            #====================\r\nActionRequestType: CA-Config\r\nCA: DigiCert\
+            \ Inc. Test Intermediate CA\r\nServiceCN: DigiCert Inc. Test Intermediate\
+            \ CA\r\nServiceDisplayName: DigiCert Inc. Test Intermediate CA\r\nCertificateTemplateCNs[1]:\
+            \ \r\n00000000-1111.2222.3333.444444444444\r\nIssuerDN: CN=DigiCert Inc.\
+            \ Test Intermediate CA, O=DigiCert Inc.\r\nCRLDownloadURL: http://crl.demo.digicert.com/DigiCertICA.crl\r\
+            \nCACertificate-L0[1]: \r\nMIIEDDCCAvSgAwIBAgIUGN255f5tXe/XgUnaz/9roZQ/DvYwDQYJKoZIhvcNAQELBQAwgZwxCzAJBgNVBAYTAlVTMQ0wCwYDVQQIEwRVdGFoMQ0wCwYDVQQHEwRMZWhpMSAwHgYDVQQJExcyODAxIE4gVGhhbmtzZ2l2aW5nIFdheTEOMAwGA1UEERMFODQwNDMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMSQwIgYDVQQDExtEaWdpQ2VydCwgSW5jLiBUZXN0IFJvb3QgQ0EwIBcNMjIwMTE3MDgwMzExWhgPMjA1MjAxMTcwODAyMjJaMIGcMQswCQYDVQQGEwJVUzENMAsGA1UECBMEVXRhaDENMAsGA1UEBxMETGVoaTEgMB4GA1UECRMXMjgwMSBOIFRoYW5rc2dpdmluZyBXYXkxDjAMBgNVBBETBTg0MDQzMRcwFQYDVQQKEw5EaWdpQ2VydCwgSW5jLjEkMCIGA1UEAxMbRGlnaUNlcnQsIEluYy4gVGVzdCBSb290IENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvZRsppfj9IWAtoYhFFbzpvXaQ2l1o7HrWPm8NaIZiCUs4xQXizZI6WWbAtUSWgYrQ8ar58WLHgt4uvP6PCTz9LMPVP8agLQQeuSiJmWRf5s2S6kNu3F9UW+cb2hvWECaMZNLQhIJLNuV/KXou/b7hV26qVNvJemeXGyVrgjapbKmP9HWh4hfdn1q4EtLM5FY7iP7N/fKTnc//cg2fAn+mOvgbOU1TehhKe17jMwFdQMPiw2//3p/EG5bvzccGb2qTBqaueUz2HV9KwQYd2eXsz0ZFGm+FeSD6TFVf5jzyjcrv4ADWTbbkKmIQJ6cQ4M8QjfMyS6pNXPdkgWlBlkEBQIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBT1NCjoO+tuVzMyZRO8t3PxVLc/0jAOBgNVHQ8BAf8EBAMCAYYwDQYJKoZIhvcNAQELBQADggEBAAbAkFVoQNF2sBeqR9aWvsAEsT0Oc08Tk2vpi8ZKl63cQSU8gv+nJ+fFMLVloodGBacxpCNvgtNN5+yi1oagitsmkLoB9tkIoGBUmS5g0LWyJqhODU2WOrhFkwhaMqW00FLQRbzNdh+aimSPDs5Eggt0bwW3PSfrLZxxoOjsLjbHBVNpoMzIgO8kTY337pu8RieHyYD0468I+7gRJy/t+jrKDHI5IVQs0mnJ3JjQXOwLAaQPxoU41q6KKuUFFHC0+wA3+jI2x5Zj3+iAhq5yvEPr5q9HVH72MRp8dTr7rgNkdx2+k2ulljkr/Hx/z1rwG5sRpZ4ud9Gb9Fs6HzQZ2TQ=\r\
+            \nCACertificate-L1[1]: \r\nMIIFMzCCBBugAwIBAgIUNsM+oetxu1BteF1NCQQm3mQlAoEwDQYJKoZIhvcNAQELBQAwgZwxCzAJBgNVBAYTAlVTMQ0wCwYDVQQIEwRVdGFoMQ0wCwYDVQQHEwRMZWhpMSAwHgYDVQQJExcyODAxIE4gVGhhbmtzZ2l2aW5nIFdheTEOMAwGA1UEERMFODQwNDMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMSQwIgYDVQQDExtEaWdpQ2VydCwgSW5jLiBUZXN0IFJvb3QgQ0EwIBcNMjIwMTE3MDgwMzU4WhgPMjA1MjAxMTcwODAyMjJaMIGkMQswCQYDVQQGEwJVUzENMAsGA1UECBMEVXRhaDENMAsGA1UEBxMETGVoaTEgMB4GA1UECRMXMjgwMSBOIFRoYW5rc2dpdmluZyBXYXkxDjAMBgNVBBETBTg0MDQzMRcwFQYDVQQKEw5EaWdpQ2VydCwgSW5jLjEsMCoGA1UEAxMjRGlnaUNlcnQsIEluYy4gVGVzdCBJbnRlcm1lZGlhdGUgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDF7eKd7vdbER1N7dxljwNKP0xP0ck3awqjSPj3OgJr4ZzPgbfsRrHpXMxPDOfDVOu51z4v3r6E0cqUNYmDcYNLIJSQPHtMqjX6BJPtTquuZ+towS0DBY2khP1lsK2tXvElK7RNlNefsnoPotUnz+4LXi3OhZWBU7TZjO4zXBq0AhnfqIYn2w65DsprtDmHsOP1v76WoUk4OrCUaXBSJ4KhcVsWyuYZUNplHzm3TclZoeee1LXb/VrniNabd/L9WXACSlaZy+ml8iISrz25ulmqp8+y+tw/OVBMQtRDz1T6vFSbRxyYlbNVxpsIslmyhoVI0erIZ++QdQM6DaGUPX7rAgMBAAGjggFfMIIBWzAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBTZQhI+tLwf12ueD7Yb8bLqV9nrmzAfBgNVHSMEGDAWgBT1NCjoO+tuVzMyZRO8t3PxVLc/0jAOBgNVHQ8BAf8EBAMCAYYweQYIKwYBBQUHAQEEbTBrMCYGCCsGAQUFBzABhhpodHRwOi8vZGNvbmUuY2x1c3Rlci5sb2NhbDBBBggrBgEFBQcwAoY1aHR0cDovL2Rjb25lLmNsdXN0ZXIubG9jYWwvRGlnaUNlcnRJbmMuVGVzdFJvb3RDQS5jcnQwfQYDVR0fBHYwdDA7oDmgN4Y1aHR0cDovL2Rjb25lLmNsdXN0ZXIubG9jYWwvRGlnaUNlcnRJbmMuVGVzdFJvb3RDQS5jcmwwNaAzoDGGL2h0dHA6Ly9kbGFiLmludGVybmFsL0RpZ2lDZXJ0SW5jLlRlc3RSb290Q0EuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQAbepeH2Llwu1VMJx3P+3bwx1GJJq53g3G09LPcToYEU6GMpulOk1wDL7fEk3J+OdckKbxaE5wWMZpJla8GelbCaMzqho+nTIJYTNBAZsAIQ+3DvpxylQ5cX7ct7TOr+Wf3QKRUzOO8rhrwUmg+oVm/ZTOk71+7TnRx1qAtPVZ0uZjLimHWBpOsEFvP5n0AEyll8Dy/v61U6neV11PRxvKZPDZEu+4MgnOw/k9TNSExKtRov8mumNCbNjULP9NBmItktn5dliAKrDtPyTN2AyfcYBg80Zp+KPRhPBhbW/gVuPtJcQtc8qUCIa1XDUneDLeEoD0ekQleZWL5pywc93DZ\r\
+            \n#END of CA Section\r\n\r\n#====================\r\nActionRequestType:\
+            \ AE-Certificate-Template\r\ncn: 00000000-1111.2222.3333.444444444444\r\
+            \nmsPKI-Cert-Template-OID: 00000000-1111.2222.3333.444444444444\r\ndisplayName:\
+            \ MSAE User\r\nrevision: 100\r\nmsPKI-Template-Minor-Revision: 1\r\npKIDefaultKeySpec:\
+            \ 0\r\nmsPKI-Template-Schema-Version: 4\r\nmsPKI-Private-Key-Flag: 0\r\
+            \npKIOverlapPeriodDays: 30\r\nmsPKI-Enrollment-Flag: 32\r\nflags: 0\r\n\
+            pKIExpirationPeriodDays: 366\r\nmsPKI-RA-Signature: 0\r\nmsPKI-RA-Application-Policies[1]:\
+            \ \r\nmsPKI-Hash-Algorithm`PZPWSTR`SHA256`msPKI-Asymmetric-Algorithm`PZPWSTR`RSA`\r\
+            \nmsPKI-Certificate-Name-Flag: 33554432\r\nmsPKI-Minimal-Key-Size: 2048\r\
+            \npKIExtendedKeyUsage[6]: \r\n1.3.6.1.5.5.7.3.2\r\n1.3.6.1.4.1.311.20.2.2\r\
+            \n1.3.6.1.5.5.7.3.7\r\n1.3.6.1.4.1.311.10.3.4\r\n1.3.6.1.4.1.311.10.3.4.1\r\
+            \n1.3.6.1.5.5.7.3.4\r\nmsPKI-Certificate-Application-Policy[6]: \r\n1.3.6.1.5.5.7.3.2\r\
+            \n1.3.6.1.4.1.311.20.2.2\r\n1.3.6.1.5.5.7.3.7\r\n1.3.6.1.4.1.311.10.3.4\r\
+            \n1.3.6.1.4.1.311.10.3.4.1\r\n1.3.6.1.5.5.7.3.4\r\npKIMaxIssuingDepth:\
+            \ 0\r\npKIKeyUsageHex: A000\r\nadNvpMap[4]: \r\ncn:subject.common_name:1\r\
+            \nc:subject.country:1\r\nmail:extensions.san.emails:1\r\nuserPrincipalName:extensions.san.user_principal_names:1\r\
+            \n#END of Profile Config Section\r\n\r\n"
+    EnrollmentResponse:
+      type: object
+      properties:
+        seat_id:
+          type: string
+          description: Seat id
+        profile_id:
+          type: string
+          description: Profile id
+          format: uuid
+        profile_name:
+          type: string
+          description: Profile name
+        enrollment_code:
+          type: string
+          description: Enrollment code to be supplied to the certificate end user
+        creation_date_time:
+          type: string
+          description: Creation date and time
+        expiry_date_time:
+          type: string
+          description: Expiration date and time
+        status:
+          type: string
+          description: Enrollment status
+        number_of_bad_attempts:
+          type: number
+          description: "Number of erroneous attempts to complete enrollment (such\
+            \ as with PUT requests sent to /mpki/api/v1/enrollment/{enrollmentCode})"
+      example:
+        seat_id: some-seat-id@example.com
+        profile_id: eb387733-ca74-4020-b432-9868ad8f1756
+        profile_name: Profile1
+        enrollment_code: "662641677"
+        creation_date_time: 2022-03-30T11:34:25.834361
+        expiry_date_time: 2022-11-09T11:34:25.704781
+        status: created
+        number_of_bad_attempts: 0
+      x-example:
+        profile_id: "{{ profile_id.[0] }}"
+        profile_name: "{{ profile_name.[0] }}"
+        creation_date_time: "{{ response.body.creation_date_time }}"
+        expiry_date_time: "{{ response.body.expiry_date_time }}"
+        enrollment_code: "{{ set enrollment_code=response.body.enrollment_code }}"
+    EnrollmentListParameters:
+      type: object
+      properties:
+        account_id:
+          type: string
+          format: uuid
+        business_unit_id:
+          type: string
+          format: uuid
+        profile_id:
+          type: string
+          format: uuid
+        seat_id:
+          type: string
+          description: Internal UUID of seat used for enrollment
+          format: uuid
+        seat_identifier:
+          type: string
+          description: Unique identifier of seat used for enrollment
+        seat_name:
+          type: string
+          description: Name of seat used for enrollment
+        email:
+          type: string
+        statuses:
+          type: array
+          description: List of enrollment statuses to limit search results to
+          items:
+            type: string
+            enum:
+            - CREATED
+            - PENDING
+            - PENDING_SECOND_APPROVAL
+            - IN_PROGRESS
+            - EXPIRED
+            - APPROVED
+            - REJECTED
+            - LOCKED
+            - REDEEM
+        created_at_from:
+          type: string
+          description: Limit results to enrollments created after provided date
+          format: date
+        created_at_to:
+          type: string
+          description: Limit results to enrollments created before provided date
+          format: date
+        expires_at_from:
+          type: string
+          description: Limit results to enrollments expiring after provided date
+          format: date
+        expires_at_to:
+          type: string
+          description: Limit results to enrollments expiring before provided date
+          format: date
+    MicrosoftAutoEnrollmentClientSettings:
+      type: object
+      properties:
+        private_key_export:
+          $ref: '#/components/schemas/MicrosoftAutoEnrollmentClientSettings_private_key_export'
+        enrollment_mode:
+          $ref: '#/components/schemas/MicrosoftAutoEnrollmentClientSettings_enrollment_mode'
+        key_spec:
+          type: string
+          description: Describes KeySpec
+          enum:
+          - xcn_at_none
+          - at_keyexchange
+          - at_signature
+        template_schema_version:
+          type: integer
+          description: Certificate template schema version
+        windows_hello_logon:
+          type: boolean
+          description: "If true, certificate is used for Windows Hello for Business\
+            \ authentication"
+        enroll_on_behalf_of:
+          type: boolean
+          description: "If true, certificate is enrolled on behalf of user"
+        publish_to_ad:
+          type: boolean
+          description: "If true, certificate is published to Active Directory"
+        end_entity_type:
+          type: string
+          description: Describes the type of End Entity Type
+          example: user
+          enum:
+          - user
+          - machine
+        crypto_providers:
+          $ref: '#/components/schemas/MicrosoftAutoEnrollmentClientSettings_crypto_providers'
+    ReportSearchParams:
+      type: object
+      properties:
+        account_id:
+          type: string
+          format: uuid
+        business_unit_id:
+          type: string
+          format: uuid
+        profile_id:
+          type: string
+          format: uuid
+        seat_id:
+          type: string
+          format: uuid
+        admin_id:
+          type: string
+          format: uuid
+        create_date:
+          type: string
+          format: date
+        redeem_date:
+          type: string
+          format: date
+        reject_date:
+          type: string
+          format: date
+        reset_date:
+          type: string
+          format: date
+        expiry_date:
+          type: string
+          format: date
+    LogSearchParameters:
+      type: object
+      properties:
+        account_id:
+          type: string
+          format: uuid
+        business_unit_id:
+          type: string
+          format: uuid
+        admin_id:
+          type: string
+          format: uuid
+        resource_id:
+          type: string
+          format: uuid
+        resource_type:
+          type: array
+          items:
+            type: string
+            enum:
+            - enrollment
+            - end_entity_certificate
+            - account
+            - business_unit
+            - seat
+            - user
+            - profile
+        status:
+          type: string
+          enum:
+          - success
+          - warning
+          - failure
+        action:
+          type: string
+          enum:
+          - create
+          - update
+          - delete
+          - expire
+          - suspend
+          - resume
+          - import
+          - revoke
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    v1_seat_body:
+      allOf:
+      - type: object
+        properties:
+          seat_id:
+            type: string
+            description: Primary seat identifier
+          seat_type:
+            type: object
+            description: Seat type identifier
+          business_unit_id:
+            $ref: '#/components/schemas/UUID'
+        description: |
+          Seat details.
+
+          If your account contains more than one business unit, `business_unit_id` is required.
+        example:
+          seat_id: some-seat-id@example.com
+          seat_type:
+            id: USER_SEAT
+          business_unit_id: 648f66d1-61d1-4618-892c-090dc20becd2
+      - $ref: '#/components/schemas/SeatDetails'
+    inline_response_200:
+      allOf:
+      - $ref: '#/components/schemas/SeatDetails'
+      - type: object
+        properties:
+          seat_id:
+            type: string
+            description: Primary seat identifier
+        example:
+          seat_id: some-seat-id@example.com
+    mpkiapiv1seatseat_id_seat_type:
+      type: object
+      properties:
+        id:
+          type: string
+          enum:
+          - USER_SEAT
+          - DEVICE_SEAT
+          - SERVER_SEAT
+      description: Seat type ID
+      example: null
+    seat_seat_id_body:
+      allOf:
+      - $ref: '#/components/schemas/SeatDetails'
+      - type: object
+        properties:
+          seat_type:
+            $ref: '#/components/schemas/mpkiapiv1seatseat_id_seat_type'
+          business_unit_id:
+            $ref: '#/components/schemas/UUID'
+        description: |
+          Seat details.
+
+          As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit.
+        example:
+          seat_type:
+            id: USER_SEAT
+          business_unit_id: 0209bbc9-4abd-402c-8052-c1bae34681e2
+    inline_response_200_1:
+      properties:
+        id:
+          type: string
+        display_name:
+          type: string
+      example:
+        id: id
+        display_name: display_name
+    mpkiapiv1enrollment_seat:
+      required:
+      - email
+      - seat_id
+      type: object
+      properties:
+        seat_id:
+          type: string
+        email:
+          type: string
+      example: null
+    v1_enrollment_body:
+      required:
+      - attributes
+      - profile
+      - seat
+      type: object
+      properties:
+        profile:
+          $ref: '#/components/schemas/UUID'
+        seat:
+          $ref: '#/components/schemas/mpkiapiv1enrollment_seat'
+        attributes:
+          type: object
+        enrollment_code:
+          type: string
+        expiry_date:
+          type: string
+          description: This parameter can only accept "yyyy-MM-dd" and "yyyy-MM-dd
+            HH:mm:ss" formats
+          example: 2021-12-11
+    mpkiapiv1enrollmentredeem_seat:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/IdDto'
+      example: null
+    enrollment_redeem_body:
+      type: object
+      properties:
+        seat:
+          $ref: '#/components/schemas/mpkiapiv1enrollmentredeem_seat'
+        profile:
+          $ref: '#/components/schemas/mpkiapiv1enrollmentredeem_seat'
+        enrollment_code:
+          type: string
+        csr:
+          type: string
+        attributes:
+          type: object
+        validity:
+          $ref: '#/components/schemas/Validity'
+    mpkiapiv1certificate_seat:
+      type: object
+      properties:
+        seat_id:
+          type: string
+      example:
+        seat_id: seat_id
+    mpkiapiv1certificate_attributes:
+      type: object
+      properties:
+        schema:
+          $ref: '#/components/schemas/CertificateAttributes'
+      example: null
+    v1_certificate_body:
+      type: object
+      properties:
+        profile:
+          $ref: '#/components/schemas/IdDto'
+        seat:
+          $ref: '#/components/schemas/mpkiapiv1certificate_seat'
+        csr:
+          type: string
+        validity:
+          $ref: '#/components/schemas/Validity'
+        delivery_format:
+          $ref: '#/components/schemas/DeliveryFormat'
+        include_ca_chain:
+          type: boolean
+        attributes:
+          $ref: '#/components/schemas/mpkiapiv1certificate_attributes'
+    serial_number_renew_body:
+      type: object
+      properties:
+        csr:
+          type: string
+          description: A CSR containing a new or existing public key
+        validity:
+          $ref: '#/components/schemas/Validity'
+        delivery_format:
+          $ref: '#/components/schemas/DeliveryFormat'
+        include_ca_chain:
+          type: boolean
+    mpkiapiv1certificateimport_revocation:
+      type: object
+      properties:
+        revoked:
+          type: boolean
+        reason:
+          type: string
+        revoke_date:
+          type: string
+      example:
+        reason: reason
+        revoke_date: revoke_date
+        revoked: true
+    v1_certificateimport_body:
+      properties:
+        cert_type:
+          type: string
+          enum:
+          - X509
+          - PKCS7
+        business_unit_id:
+          type: string
+          format: uuid
+        seat_id:
+          type: string
+        cert:
+          type: string
+          format: binary
+        notes:
+          type: string
+        group_name:
+          type: string
+        revocation:
+          $ref: '#/components/schemas/mpkiapiv1certificateimport_revocation'
+    mpkiapiv1certificateimport_seat:
+      type: object
+      properties:
+        seat_id:
+          type: string
+        type:
+          type: string
+        email:
+          type: string
+      example:
+        seat_id: seat_id
+        type: type
+        email: email
+    mpkiapiv1certificateimport_business_unit_id:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      example:
+        name: name
+        id: id
+    inline_response_200_2:
+      properties:
+        cert_type:
+          type: string
+        issuing_ca:
+          type: string
+        import_status:
+          type: string
+        error_message:
+          type: string
+        seat:
+          $ref: '#/components/schemas/mpkiapiv1certificateimport_seat'
+        business_unit_id:
+          $ref: '#/components/schemas/mpkiapiv1certificateimport_business_unit_id'
+        cert_status:
+          type: string
+        revocation:
+          $ref: '#/components/schemas/mpkiapiv1certificateimport_revocation'
+      example:
+        error_message: error_message
+        seat:
+          seat_id: seat_id
+          type: type
+          email: email
+        revocation:
+          reason: reason
+          revoke_date: revoke_date
+          revoked: true
+        cert_type: cert_type
+        business_unit_id:
+          name: name
+          id: id
+        cert_status: cert_status
+        import_status: import_status
+        issuing_ca: issuing_ca
+    inline_response_200_3:
+      allOf:
+      - $ref: '#/components/schemas/PaginationResult'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/PublicCertificateDetails'
+    serial_number_revoke_body:
+      type: object
+      properties:
+        revocation_reason:
+          type: string
+          enum:
+          - unspecified
+          - key_compromise
+          - ca_compromise
+          - affiliation_changed
+          - superseded
+          - cessation_of_operation
+          - certificate_hold
+          - remove_from_crl
+          - privilege_withdrawn
+          - aa_compromise
+    inline_response_200_4:
+      allOf:
+      - $ref: '#/components/schemas/PaginationResult'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/ExternalEnrollmentReport'
+    inline_response_200_5:
+      allOf:
+      - $ref: '#/components/schemas/PaginationResult'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/AuditLogItem'
+    PublicProfileResponse_private_key_attributes:
+      type: object
+      properties:
+        key_size:
+          pattern: ^\d+$
+          type: string
+      example: null
+    PublicProfileResponse_certificate_subject:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicProfileField'
+      example: null
+    PublicProfileResponse_certificate_extensions_san:
+      type: object
+      properties:
+        critical:
+          type: boolean
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicProfileField'
+      example: null
+    PublicProfileResponse_certificate_extensions:
+      type: object
+      properties:
+        san:
+          $ref: '#/components/schemas/PublicProfileResponse_certificate_extensions_san'
+      example: null
+    PublicProfileResponse_certificate:
+      type: object
+      properties:
+        subject:
+          $ref: '#/components/schemas/PublicProfileResponse_certificate_subject'
+        validity:
+          $ref: '#/components/schemas/Validity'
+        extensions:
+          $ref: '#/components/schemas/PublicProfileResponse_certificate_extensions'
+        issuer:
+          allOf:
+          - $ref: '#/components/schemas/CaResponse'
+          - type: object
+            properties:
+              chain:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaResponse'
+      example: null
+    CertificateExtensions_san:
+      type: object
+      properties:
+        critical:
+          type: boolean
+          default: false
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicProfileField'
+      example: null
+    AuditLogItem_account:
+      type: object
+      properties:
+        id:
+          type: string
+      example:
+        id: id
+    PublicCertificateDetails_revocation:
+      type: object
+      properties:
+        reason:
+          type: string
+        revocation_date:
+          type: string
+          format: date
+        comments:
+          type: string
+      example:
+        reason: reason
+        comments: comments
+        revocation_date: 2000-01-23
+    PublicEnrollmentDetails_seat:
+      type: object
+      properties:
+        seat_id:
+          type: string
+        seat_type:
+          type: string
+      example:
+        seat_type: seat_type
+        seat_id: seat_id
+    MicrosoftAutoEnrollmentClientSettings_private_key_export:
+      type: object
+      properties:
+        modifiable:
+          type: boolean
+        allowed:
+          type: boolean
+      description: Object to store private key exportability information
+      example: null
+    MicrosoftAutoEnrollmentClientSettings_enrollment_mode:
+      type: object
+      properties:
+        modifiable:
+          type: boolean
+        mode:
+          type: string
+          enum:
+          - silent
+          - inform_user
+      description: Object to store enrollment mode information
+      example: null
+    MicrosoftAutoEnrollmentClientSettings_crypto_providers:
+      type: object
+      properties:
+        modifiable:
+          type: boolean
+          description: Whether this object is modifiable
+          example: true
+        providers:
+          type: array
+          description: "Describes the list of usable Crypto Providers, empty array\
+            \ allows any provider available on subject's computer"
+          example:
+          - Microsoft Software Key Storage Provider
+          - Microsoft Platform Crypto Provider
+          - Microsoft Smart Card Key Storage Provider
+          items:
+            type: string
+      description: Object to store information about usable Crypto Providers
+      example: null
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-API-Key
+      in: header

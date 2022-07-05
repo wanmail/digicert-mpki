@@ -1,6 +1,6 @@
-# \SeatsApi
+# {{classname}}
 
-All URIs are relative to *https://one.digicert.com*
+All URIs are relative to *https://one.digicert.com/*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -10,55 +10,24 @@ Method | HTTP request | Description
 [**MpkiApiV1SeatSeatIdPut**](SeatsApi.md#MpkiApiV1SeatSeatIdPut) | **Put** /mpki/api/v1/seat/{seat_id} | Update seat
 [**MpkiApiV1SeatTypesGet**](SeatsApi.md#MpkiApiV1SeatTypesGet) | **Get** /mpki/api/v1/seat-types | Get available seat types
 
-
-
-## MpkiApiV1SeatPost
-
-> SeatDetails MpkiApiV1SeatPost(ctx).MpkiApiV1SeatPostRequest(mpkiApiV1SeatPostRequest).Execute()
-
+# **MpkiApiV1SeatPost**
+> SeatDetails MpkiApiV1SeatPost(ctx, optional)
 Create seat
 
+Use this endpoint to create a new seat. Each seat decreases the number of allocated seats for the given seat type. This endpoint does not restore previously deleted seats—reusing deleted seat IDs results in the creation of a new seat with the previously deleted seat ID.   Each unique seat ID represents only one active seat at any given time — duplicate seat IDs are not permitted.   `seat_id` is the identifier for each seat — this must be unique within each business unit and for each seat type.  The `seat_type` parameter is optional. If no `seat_type` is specified, this defaults to `USER_SEAT`. Possible values for `seat_type.id` are `USER_SEAT`, `DEVICE_SEAT` and `SERVER_SEAT`.  
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    mpkiApiV1SeatPostRequest := *openapiclient.NewMpkiApiV1SeatPostRequest() // MpkiApiV1SeatPostRequest |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SeatsApi.MpkiApiV1SeatPost(context.Background()).MpkiApiV1SeatPostRequest(mpkiApiV1SeatPostRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SeatsApi.MpkiApiV1SeatPost``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1SeatPost`: SeatDetails
-    fmt.Fprintf(os.Stdout, "Response from `SeatsApi.MpkiApiV1SeatPost`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1SeatPostRequest struct via the builder pattern
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **mpkiApiV1SeatPostRequest** | [**MpkiApiV1SeatPostRequest**](MpkiApiV1SeatPostRequest.md) |  | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***SeatsApiMpkiApiV1SeatPostOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a SeatsApiMpkiApiV1SeatPostOpts struct
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**optional.Interface of V1SeatBody**](V1SeatBody.md)|  | 
 
 ### Return type
 
@@ -70,69 +39,33 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json;charset=utf-8
-- **Accept**: application/json
+ - **Content-Type**: application/json;charset=utf-8
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1SeatSeatIdDelete
-
-> SeatDetails MpkiApiV1SeatSeatIdDelete(ctx, seatId).SeatTypeId(seatTypeId).BusinessUnitId(businessUnitId).Execute()
-
+# **MpkiApiV1SeatSeatIdDelete**
+> SeatDetails MpkiApiV1SeatSeatIdDelete(ctx, seatId, seatTypeId, optional)
 Delete seat
 
+Use this endpoint to delete a given seat ID. Deleting the seat ID restores an available seat of the same type in your account. As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit. The `seat_type` parameter is required. Possible values for `seat_type.id` are `USER_SEAT`, `DEVICE_SEAT` and `SERVER_SEAT`.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    seatId := "some-seat-id@example.com" // string | Seat ID
-    seatTypeId := "USER_SEAT" // string | Seat Type ID
-    businessUnitId := "8f3764a4-678c-469d-8699-0308552ec256" // string | Business unit ID (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SeatsApi.MpkiApiV1SeatSeatIdDelete(context.Background(), seatId).SeatTypeId(seatTypeId).BusinessUnitId(businessUnitId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SeatsApi.MpkiApiV1SeatSeatIdDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1SeatSeatIdDelete`: SeatDetails
-    fmt.Fprintf(os.Stdout, "Response from `SeatsApi.MpkiApiV1SeatSeatIdDelete`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**seatId** | **string** | Seat ID | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **seatId** | **string**| Seat ID | 
+  **seatTypeId** | **string**| Seat Type ID | 
+ **optional** | ***SeatsApiMpkiApiV1SeatSeatIdDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1SeatSeatIdDeleteRequest struct via the builder pattern
-
-
+### Optional Parameters
+Optional parameters are passed through a pointer to a SeatsApiMpkiApiV1SeatSeatIdDeleteOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **seatTypeId** | **string** | Seat Type ID | 
- **businessUnitId** | **string** | Business unit ID | 
+
+ **businessUnitId** | [**optional.Interface of string**](.md)| Business unit ID | 
 
 ### Return type
 
@@ -144,73 +77,37 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1SeatSeatIdGet
-
-> MpkiApiV1SeatSeatIdDelete200Response MpkiApiV1SeatSeatIdGet(ctx, seatId).SeatTypeId(seatTypeId).BusinessUnitId(businessUnitId).Execute()
-
+# **MpkiApiV1SeatSeatIdGet**
+> InlineResponse200 MpkiApiV1SeatSeatIdGet(ctx, seatId, seatTypeId, optional)
 Get seat by ID
 
+Use this endpoint to retrieve the details of a given seat ID. Seat IDs are unique for each `business_unit_id` and `seat_type`. As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit. The `seat_type` parameter is required. Possible values for `seat_type.id` are `USER_SEAT`, `DEVICE_SEAT` and `SERVER_SEAT`.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    seatId := "some-seat-id@example.com" // string | Seat ID
-    seatTypeId := "seatTypeId_example" // string | Seat Type ID
-    businessUnitId := "8caedac5-8669-4f9a-8c42-44825d154577" // string | Business unit ID.  As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit.  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SeatsApi.MpkiApiV1SeatSeatIdGet(context.Background(), seatId).SeatTypeId(seatTypeId).BusinessUnitId(businessUnitId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SeatsApi.MpkiApiV1SeatSeatIdGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1SeatSeatIdGet`: MpkiApiV1SeatSeatIdDelete200Response
-    fmt.Fprintf(os.Stdout, "Response from `SeatsApi.MpkiApiV1SeatSeatIdGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**seatId** | **string** | Seat ID | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **seatId** | **string**| Seat ID | 
+  **seatTypeId** | **string**| Seat Type ID | 
+ **optional** | ***SeatsApiMpkiApiV1SeatSeatIdGetOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1SeatSeatIdGetRequest struct via the builder pattern
-
-
+### Optional Parameters
+Optional parameters are passed through a pointer to a SeatsApiMpkiApiV1SeatSeatIdGetOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **seatTypeId** | **string** | Seat Type ID | 
- **businessUnitId** | **string** | Business unit ID.  As identical seat IDs may exist across various business units of the same account, the &#x60;business_unit_id&#x60; for the given seat must be specified as a query parameter if the account contains more than one business unit.  | 
+
+ **businessUnitId** | [**optional.Interface of string**](.md)| Business unit ID.  As identical seat IDs may exist across various business units of the same account, the &#x60;business_unit_id&#x60; for the given seat must be specified as a query parameter if the account contains more than one business unit.  | 
 
 ### Return type
 
-[**MpkiApiV1SeatSeatIdDelete200Response**](MpkiApiV1SeatSeatIdDelete200Response.md)
+[**InlineResponse200**](inline_response_200.md)
 
 ### Authorization
 
@@ -218,67 +115,31 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1SeatSeatIdPut
-
-> SeatDetails MpkiApiV1SeatSeatIdPut(ctx, seatId).MpkiApiV1SeatSeatIdDeleteRequest(mpkiApiV1SeatSeatIdDeleteRequest).Execute()
-
+# **MpkiApiV1SeatSeatIdPut**
+> SeatDetails MpkiApiV1SeatSeatIdPut(ctx, seatId, optional)
 Update seat
 
+Use this endpoint to update the details for a given seat ID. Include the seat details to be updated in the request body. As identical seat IDs may exist across various business units of the same account, the `business_unit_id` for the given seat must be specified as a query parameter if the account contains more than one business unit. The `seat_type` parameter is optional. If no `seat_type` is specified, this defaults to `USER_SEAT`. Possible values for `seat_type.id` are `USER_SEAT`, `DEVICE_SEAT` and `SERVER_SEAT`.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    seatId := "some-seat-id@example.com" // string | Seat ID
-    mpkiApiV1SeatSeatIdDeleteRequest := *openapiclient.NewMpkiApiV1SeatSeatIdDeleteRequest() // MpkiApiV1SeatSeatIdDeleteRequest |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SeatsApi.MpkiApiV1SeatSeatIdPut(context.Background(), seatId).MpkiApiV1SeatSeatIdDeleteRequest(mpkiApiV1SeatSeatIdDeleteRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SeatsApi.MpkiApiV1SeatSeatIdPut``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1SeatSeatIdPut`: SeatDetails
-    fmt.Fprintf(os.Stdout, "Response from `SeatsApi.MpkiApiV1SeatSeatIdPut`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**seatId** | **string** | Seat ID | 
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **seatId** | **string**| Seat ID | 
+ **optional** | ***SeatsApiMpkiApiV1SeatSeatIdPutOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1SeatSeatIdPutRequest struct via the builder pattern
-
-
+### Optional Parameters
+Optional parameters are passed through a pointer to a SeatsApiMpkiApiV1SeatSeatIdPutOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **mpkiApiV1SeatSeatIdDeleteRequest** | [**MpkiApiV1SeatSeatIdDeleteRequest**](MpkiApiV1SeatSeatIdDeleteRequest.md) |  | 
+ **body** | [**optional.Interface of SeatSeatIdBody**](SeatSeatIdBody.md)|  | 
 
 ### Return type
 
@@ -290,60 +151,23 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json;charset=utf-8
-- **Accept**: application/json
+ - **Content-Type**: application/json;charset=utf-8
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-
-## MpkiApiV1SeatTypesGet
-
-> []MpkiApiV1SeatTypesGet200ResponseInner MpkiApiV1SeatTypesGet(ctx).Execute()
-
+# **MpkiApiV1SeatTypesGet**
+> []InlineResponse2001 MpkiApiV1SeatTypesGet(ctx, )
 Get available seat types
 
+Use this endpoint to fetch details about available seat types for the account. Returns an array containing seat type details.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SeatsApi.MpkiApiV1SeatTypesGet(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SeatsApi.MpkiApiV1SeatTypesGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MpkiApiV1SeatTypesGet`: []MpkiApiV1SeatTypesGet200ResponseInner
-    fmt.Fprintf(os.Stdout, "Response from `SeatsApi.MpkiApiV1SeatTypesGet`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
+### Required Parameters
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiMpkiApiV1SeatTypesGetRequest struct via the builder pattern
-
 
 ### Return type
 
-[**[]MpkiApiV1SeatTypesGet200ResponseInner**](MpkiApiV1SeatTypesGet200ResponseInner.md)
+[**[]InlineResponse2001**](inline_response_200_1.md)
 
 ### Authorization
 
@@ -351,10 +175,8 @@ Other parameters are passed through a pointer to a apiMpkiApiV1SeatTypesGetReque
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
